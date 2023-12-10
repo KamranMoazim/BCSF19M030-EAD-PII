@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddAutoMapper(typeof(MapperProfile));
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+// builder.Services.AddTransient<ActivityLoggingMiddleware>();
 
 
 builder.Services.AddDbContext<AppDbContext>();
@@ -118,6 +119,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+app.UseMiddleware<ActivityLoggingMiddleware>();
 
 app.UseAuthorization();
 
