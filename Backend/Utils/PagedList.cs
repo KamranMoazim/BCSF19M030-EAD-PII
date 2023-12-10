@@ -1,6 +1,6 @@
 
 
-using Backend.Model;
+using Backend.Model.HelpingModels;
 
 namespace Backend.Utils
 {

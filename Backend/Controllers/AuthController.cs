@@ -1,28 +1,12 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Threading.Tasks;
-// using Microsoft.AspNetCore.Mvc;
 
-// namespace Backend.Controllers
-// {
-//     [ApiController]
-//     [Route("api/[controller]")]
-//     public class Auth : ControllerBase
-//     {
-        
-//     }
-// }
-
-
-using Backend.Models;
+using Backend.Dtos;
+using Backend.Interfaces.Repositories.AuthRepo;
+using Backend.Model;
+using Backend.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Backend.Dtos.UserDtos;
-using Backend.Repositories.AuthRepo;
-using Backend.Utils;
-using Backend.Dtos.GenericDTOs;
+
 
 namespace Backend.Controllers
 {
@@ -41,18 +25,35 @@ namespace Backend.Controllers
         [AllowAnonymous]
         public ActionResult<IEnumerable<UserDto>> GetAllUsers()
         {
-            return Ok(AuthRepository.GetAll());
+            return Ok(AuthRepository.Get());
         }
 
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public ActionResult<CreateResponseDto> Register([FromBody] CreateUserDto userDto)
+        public ActionResult<MessageResponseDto> Register([FromBody] RegisterUserDto userDto)
         {
 
-            User user = AuthRepository.Register(userDto);
+            User userExists = AuthRepository.GetUserByEmail(userDto.Email);
 
-            CreateResponseDto createResponseDto = new CreateResponseDto
+            if (userExists != null)
+            {
+                return BadRequest(new MessageResponseDto
+                {
+                    Status = "Error",
+                    Message = "User already exists"
+                });
+            }
+
+            User user = new User
+            {
+                Email = userDto.Email,
+                Password = userDto.Password,
+            };
+
+            AuthRepository.Register(user);
+
+            MessageResponseDto createResponseDto = new MessageResponseDto
             {
                 Status = "Success",
                 Message = "User created successfully"
@@ -66,9 +67,21 @@ namespace Backend.Controllers
         [AllowAnonymous]
         public ActionResult<LoginUserResponseDto> Login( [FromBody] LoginUserDto userDto)
         {
-            User user = AuthRepository.Login(userDto);
 
-            // string token = new AuthUtils(userManager, roleManager, _configuration).CreateToken(user);
+            User userExists = AuthRepository.GetUserByEmail(userDto.Email);
+
+            if (userExists == null)
+            {
+                return BadRequest(new MessageResponseDto
+                {
+                    Status = "Error",
+                    Message = "Invalid Credentials"
+                });
+            }
+
+            userExists.Password = userDto.Password;
+            User user = AuthRepository.Login(userExists);
+
             string token = AuthUtils.CreateToken(user);
 
             LoginUserResponseDto loginUserResponseDto = new LoginUserResponseDto
@@ -76,9 +89,7 @@ namespace Backend.Controllers
                 Token = token,
                 User = new UserDto
                 {
-                    Id = user.ID,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
+                    ID = user.ID,
                     Email = user.Email
                 }
             };
@@ -105,14 +116,12 @@ namespace Backend.Controllers
                 if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
                 {
                     // Fetch the user from your repository or database based on the user ID
-                    var user = AuthRepository.GetUser(userId);
+                    var user = AuthRepository.Get(userId);
 
                     // Create the response DTO
                     var responseUserDto = new UserDto
                     {
-                        Id = user.ID,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
+                        ID = user.ID,
                         Email = user.Email
                     };
 
@@ -137,7 +146,7 @@ namespace Backend.Controllers
 
         [HttpPost("forgot-password")]
         [AllowAnonymous]
-        public ActionResult<ForgotPasswordResponseDto> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+        public ActionResult<MessageResponseDto> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
         {
             try
             {
@@ -147,7 +156,7 @@ namespace Backend.Controllers
                 if (user == null)
                 {
                     // Return a generic response to avoid leaking information about registered emails
-                    return Ok(new ForgotPasswordResponseDto
+                    return Ok(new MessageResponseDto
                     {
                         Status = "Success",
                         Message = "If the email exists in our system, we have sent a password reset link to your email."
@@ -163,7 +172,7 @@ namespace Backend.Controllers
                 // In a real-world scenario, you would send an email with a link like:
                 // "https://yourdomain.com/reset-password?token=resetToken"
 
-                return Ok(new ForgotPasswordResponseDto
+                return Ok(new MessageResponseDto
                 {
                     Status = "Success",
                     Message = "If the email exists in our system, we have sent a password reset link to your email."
@@ -179,69 +188,5 @@ namespace Backend.Controllers
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        [HttpGet("student")]
-        // [Role("Student")]
-        [Authorize(Roles = "Student")]
-        // [Authorize(Policy = "StudentPolicy")]
-        public ActionResult<string> StudentAccess()
-        {
-            return Ok("Hi Student");
-        }
-
-        [HttpGet("test")]
-        [Authorize(Roles = "Student, Instructor, Admin")]
-        public IActionResult Test()
-        {
-
-            return Ok("Test");
-        }
-
-        [HttpGet("instructor")]
-        // [Role("Instructor")]
-        [Authorize(Roles = "Instructor")]
-        public ActionResult<string> InstructorAccess()
-        {
-            return Ok("Hi Instructor");
-        }
-
-
-        [HttpGet("public")]
-        // [Role("Public")]
-        [AllowAnonymous]
-        public ActionResult<string> PublicAccess()
-        {
-            return Ok("Hi Public");
-        }
     }
 }

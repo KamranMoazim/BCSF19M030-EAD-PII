@@ -1,21 +1,7 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Threading.Tasks;
-
-// namespace Backend.Utils
-// {
-//     public class Token
-//     {
-        
-//     }
-// }
-
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Backend.Models;
+using Backend.Model;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -40,10 +26,10 @@ namespace Backend.Utils
                 new Claim(ClaimTypes.Name, user.Email),
                 // new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 // new Claim(ClaimTypes.Role, user.UserType.ToString())
-                new Claim(ClaimTypes.Role, user.UserType)
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
-            Console.WriteLine("UserType: " + user.UserType.ToString());
+            // Console.WriteLine("UserType: " + user.Role.ToString());
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ByYM000OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SNM"));
 

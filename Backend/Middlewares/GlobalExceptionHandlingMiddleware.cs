@@ -1,19 +1,8 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Threading.Tasks;
-
-// namespace Backend.Middlewares
-// {
-//     public class te
-//     {
-        
-//     }
-// }
-
 
 using System.Net;
 using Backend.Exceptions;
+
+// using Backend.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;

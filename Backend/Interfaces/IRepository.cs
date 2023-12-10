@@ -1,4 +1,4 @@
-using Backend.Model;
+using Backend.Model.HelpingModels;
 using Backend.Utils;
 
 namespace Backend.Interfaces
