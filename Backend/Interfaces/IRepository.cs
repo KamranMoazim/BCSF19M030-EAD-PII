@@ -3,7 +3,8 @@ using Backend.Utils;
 
 namespace Backend.Interfaces
 {
-    public interface IRepository<T> where T: AuditInfo
+    // public interface IRepository<T> where T: AuditInfo
+    public interface IRepository<T> where T: Identity
     {
         T Save(T dto);
         T Update(T dto);

@@ -4,7 +4,8 @@ using Backend.Model.HelpingModels;
 
 namespace Backend.Utils
 {
-    public class PagedList<T> where T : AuditInfo
+    // public class PagedList<T> where T : AuditInfo
+    public class PagedList<T> where T : Identity
     {
         public IEnumerable<T> Source { get; set; }
         public int NumberOfRows { get; set; }

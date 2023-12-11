@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using Backend.Constants;
+using Backend.Dtos;
 using Backend.Model;
 using Backend.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,108 @@ namespace Backend.Repositories.StudentsRepo
 
 
         // ISudentRepository implementation
+        public Dictionary<string, int> GetProvincialDistribution()
+        {
+            // Assuming that the province information is in the City property
+            var provincialDistribution = _context.Student
+                .GroupBy(s => s.City)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            return provincialDistribution;
+        }
+
+        public List<DailyStudentCreationDto> GetDailyStudentCreationData()
+        {
+            var endDate = DateTime.UtcNow.Date;
+            var startDate = endDate.AddDays(-29); // Last 30 days
+
+            var dailyCreationData = _context.Student
+                .Where(s => s.CreatedOn >= startDate && s.CreatedOn <= endDate)
+                .GroupBy(s => s.CreatedOn.Date)
+                .Select(g => new DailyStudentCreationDto
+                {
+                    Date = g.Key,
+                    StudentCount = g.Count()
+                })
+                .OrderBy(d => d.Date)
+                .ToList();
+
+            return dailyCreationData;
+        }
+
+        public Dictionary<int, int> GetAgeDistribution()
+        {
+            var today = DateTime.UtcNow.Date.ToDateOnly(); // using extension method, see Utils/HelperFuncs.cs
+            var ageDistribution = _context.Student
+                .Where(s => s.DateOfBirth != null)
+                .Select(s => new
+                {
+                    Age = HelperFuncs.CalculateAge(s.DateOfBirth, today),
+                })
+                .GroupBy(s => s.Age)
+                .OrderBy(g => g.Key)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            return ageDistribution;
+        }
+
+        public Dictionary<string, int> GetDepartmentDistribution()
+        {
+            var departmentDistribution = _context.Student
+                .Where(s => !string.IsNullOrEmpty(s.Department))
+                .GroupBy(s => s.Department)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            return departmentDistribution;
+        }
+
+        public Dictionary<string, int> GetDegreeDistribution()
+        {
+            var degreeDistribution = _context.Student
+                .Where(s => !string.IsNullOrEmpty(s.DegreeTitle))
+                .GroupBy(s => s.DegreeTitle)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            return degreeDistribution;
+        }
+
+        public Dictionary<string, int> GetGenderDistribution()
+        {
+            var genderDistribution = _context.Student
+                .GroupBy(s => s.Gender ? "Male" : "Female")
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            return genderDistribution;
+        }
+
+        public Dictionary<string, int> GetStudentsStatusGrid(int daysThreshold = 30)
+        {
+            var currentDate = DateOnly.FromDateTime(DateTime.UtcNow.Date);
+
+            var numberOfStudentsCurrentlyStudying = _context.Student
+                .Count(s => s.StartDate <= currentDate && (s.EndDate == null || s.EndDate > currentDate));
+
+            var startDateThreshold = currentDate.AddDays(-daysThreshold);
+            var numberOfStudentsRecentlyEnrolled = _context.Student
+                .Count(s => s.StartDate >= startDateThreshold);
+
+            var endDateThreshold = currentDate.AddDays(daysThreshold);
+            var numberOfStudentsAboutToGraduate = _context.Student
+                .Count(s => s.EndDate != null && s.EndDate > currentDate && s.EndDate <= endDateThreshold);
+
+            var numberOfStudentsGraduated = _context.Student
+                .Count(s => s.EndDate != null && s.EndDate <= currentDate);
+
+            var studentsStatusGrid = new Dictionary<string, int>
+            {
+                {"Currently Studying", numberOfStudentsCurrentlyStudying},
+                {"Recently Enrolled", numberOfStudentsRecentlyEnrolled},
+                {"About to Graduate", numberOfStudentsAboutToGraduate},
+                {"Graduated", numberOfStudentsGraduated}
+            };
+
+            return studentsStatusGrid;
+        }
 
 
 
@@ -154,6 +257,5 @@ namespace Backend.Repositories.StudentsRepo
                 totalItems / pagingInfo.PageSize <= 0 ? 1 : totalItems / pagingInfo.PageSize
             );
         }
-
     }
 }

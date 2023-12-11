@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Backend.Utils;
 using Backend.Repositories.InterestRepo;
 using Backend.Repositories.StudentsRepo;
+using Backend.Repositories.AppActivityRepo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IInterestRepository, InterestRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IAppActivityRepository, AppActivityRepository>();
 
 // Add services to the container.
 

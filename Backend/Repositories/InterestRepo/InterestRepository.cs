@@ -25,7 +25,50 @@ namespace Backend.Repositories.InterestRepo
             return _context.Interest.FirstOrDefault(x => x.Name == name);
         }
 
+        public List<string> GetTop5Interests()
+        {
 
+            var top5Interests = _context.Student
+                .GroupBy(s => s.Interest)
+                .Select(g => new
+                {
+                    Interest = g.Key,
+                    Count = g.Count()
+                })
+                .OrderByDescending(i => i.Count)
+                .Take(5)
+                .Select(i => i.Interest)
+                .ToList();
+
+            return top5Interests.Select(i => i.Name).ToList();
+        }
+
+        public List<string> GetBottom5Interests()
+        {
+            var bottom5Interests = _context.Student
+                .GroupBy(s => s.Interest)
+                .Select(g => new
+                {
+                    Interest = g.Key,
+                    Count = g.Count()
+                })
+                .OrderBy(i => i.Count)
+                .Take(5)
+                .Select(i => i.Interest)
+                .ToList();
+
+            return bottom5Interests.Select(i => i.Name).ToList();
+        }
+
+        public int GetUniqueInterestsCount()
+        {
+            var uniqueInterestsCount = _context.Interest
+                .Select(s => s.Name)
+                .Distinct()
+                .Count();
+
+            return uniqueInterestsCount;
+        }
 
 
         // IRepository implementation
@@ -69,5 +112,7 @@ namespace Backend.Repositories.InterestRepo
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

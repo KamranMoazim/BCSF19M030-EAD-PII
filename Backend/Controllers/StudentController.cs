@@ -138,5 +138,53 @@ namespace Backend.Controllers
 
 
 
+
+
+
+
+        [HttpGet("get-provincial-distribution")]
+        public ActionResult<Dictionary<string, int>> GetProvincialDistribution()
+        {
+            return Ok(StudentRepository.GetProvincialDistribution());
+        }
+
+        [HttpGet("get-daily-student-creation-data")]
+        public ActionResult<List<DailyStudentCreationDto>> GetDailyStudentCreationData()
+        {
+            return Ok(StudentRepository.GetDailyStudentCreationData());
+        }
+
+        [HttpGet("get-age-distribution")]
+        public ActionResult<Dictionary<int, int>> GetAgeDistribution()
+        {
+            return Ok(StudentRepository.GetAgeDistribution());
+        }
+
+        [HttpGet("get-department-distribution")]
+        public ActionResult<Dictionary<string, int>> GetDepartmentDistribution()
+        {
+            return Ok(StudentRepository.GetDepartmentDistribution());
+        }
+
+        [HttpGet("get-degree-distribution")]
+        public Dictionary<string, int> GetDegreeDistribution()
+        {
+            return StudentRepository.GetDegreeDistribution();
+        }
+
+        [HttpGet("get-gender-distribution")]
+        public Dictionary<string, int> GetGenderDistribution()
+        {
+            return StudentRepository.GetGenderDistribution();
+        }
+
+        [HttpGet("get-students-status-grid")]
+        public Dictionary<string, int> GetStudentsStatusGrid()
+        {
+            return StudentRepository.GetStudentsStatusGrid();
+        }
+
+
+
     }
 }

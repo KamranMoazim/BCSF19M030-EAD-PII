@@ -14,6 +14,7 @@ namespace Backend.Dtos
 
 
         [Required, MaxLength(15)]
+        [RegularExpression(@"^[A-Za-z]{3}\d{2}[A-Za-z]\d{3}$", ErrorMessage = "RollNumber must follow the pattern 'BCSF19M030'")]
         public string RollNumber { get; set; }
 
 

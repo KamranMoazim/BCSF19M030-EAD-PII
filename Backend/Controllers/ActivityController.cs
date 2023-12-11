@@ -1,5 +1,7 @@
 
+using Backend.Dtos;
 using Backend.Model;
+using Backend.Repositories.AppActivityRepo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -9,36 +11,49 @@ namespace Backend.Controllers
     public class ActivityController : ControllerBase
     {
         
+        public IAppActivityRepository AppActivityRepository { get; set; }
+
+        public ActivityController(IAppActivityRepository appActivityRepository)
+        {
+            AppActivityRepository = appActivityRepository;
+        }
+
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppActivity>>> Get()
+        public ActionResult<IEnumerable<AppActivity>> Get()
         {
-            var k = new AppDbContext();
-            return Ok(k.AppActivity.ToList());
+            return Ok(AppActivityRepository.Get());
         }
-        //
-        // [HttpGet("{id}")]
-        // public async Task<ActionResult<AppActivity>> Get(int id)
-        // {
-        //     return Ok(await _activityRepository.Get(id));
-        // }
-        //
-        // [HttpPost]
-        // public async Task<ActionResult<AppActivity>> Post([FromBody] AppActivity activity)
-        // {
-        //     return Ok(await _activityRepository.Add(activity));
-        // }
-        //
-        // [HttpPut]
-        // public async Task<ActionResult<AppActivity>> Put([FromBody] AppActivity activity)
-        // {
-        //     return Ok(await _activityRepository.Update(activity));
-        // }
-        //
-        // [HttpDelete("{id}")]
-        // public async Task<ActionResult<AppActivity>> Delete(int id)
-        // {
-        //     return Ok(await _activityRepository.Delete(id));
-        // }
+
+        [HttpGet("get-daily-activity-counts")]
+        public ActionResult<IEnumerable<DailyActivityCountDto>> GetDailyActivityCounts()
+        {
+            return Ok(AppActivityRepository.GetDailyActivityCounts());
+        }
+
+        [HttpGet("get-hourly-activity-counts")]
+        public ActionResult<IEnumerable<HourlyActivityCountDto>> GetHourlyActivityCounts()
+        {
+            return Ok(AppActivityRepository.GetHourlyActivityCounts());
+        }
+
+        [HttpGet("get-most-active-hours")]
+        public ActionResult<IEnumerable<string>> GetMostActiveHours()
+        {
+            return Ok(AppActivityRepository.GetMostActiveHours());
+        }
+
+        [HttpGet("get-least-active-hours")]
+        public ActionResult<IEnumerable<string>> GetLeastActiveHours()
+        {
+            return Ok(AppActivityRepository.GetLeastActiveHours());
+        }
+
+        [HttpGet("get-dead-hours")]
+        public ActionResult<IEnumerable<string>> GetDeadHours()
+        {
+            return Ok(AppActivityRepository.GetDeadHours());
+        }
+
     }
 }
