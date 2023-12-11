@@ -70,8 +70,6 @@
 /home/kamranmoazim/Desktop/EAD/PostMid/Backend/obj/Debug/net7.0/Backend.pdb
 /home/kamranmoazim/Desktop/EAD/PostMid/Backend/obj/Debug/net7.0/Backend.genruntimeconfig.cache
 /home/kamranmoazim/Desktop/EAD/PostMid/Backend/obj/Debug/net7.0/ref/Backend.dll
-/home/kamranmoazim/Desktop/EAD/PostMid/Backend/bin/Debug/net7.0/AspNetCoreRateLimit.dll
-/home/kamranmoazim/Desktop/EAD/PostMid/Backend/bin/Debug/net7.0/Newtonsoft.Json.dll
 /home/kamranmoazim/Desktop/EAD/PostMid/Backend/bin/Debug/net7.0/runtimes/alpine-arm/native/libe_sqlite3.so
 /home/kamranmoazim/Desktop/EAD/PostMid/Backend/bin/Debug/net7.0/runtimes/alpine-arm64/native/libe_sqlite3.so
 /home/kamranmoazim/Desktop/EAD/PostMid/Backend/bin/Debug/net7.0/runtimes/browser-wasm/nativeassets/net7.0/e_sqlite3.a

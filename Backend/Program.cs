@@ -13,6 +13,7 @@ using Backend.Repositories.AppActivityRepo;
 var builder = WebApplication.CreateBuilder(args);
 
 
+
 // Add services to the container.
 builder.Services.AddAutoMapper(typeof(MapperProfile));
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
@@ -33,6 +34,21 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
+
+
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy =>
+    {
+        policy.RequireRole("Admin");
+    });
+});
+
+
 
 
 // for jwt
@@ -67,7 +83,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "EduScuplt API",
+        Title = "SIS API",
         Version = "v1"
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -115,6 +131,8 @@ var app = builder.Build();
 
 
 
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -122,12 +140,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+
+// my custom middleware for jwt to convert jwt to user 
+app.UseJwtToUserMiddleware();
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseMiddleware<ActivityLoggingMiddleware>();
 
+
+app.UseHttpsRedirection();
+
+
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 

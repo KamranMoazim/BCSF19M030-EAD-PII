@@ -41,7 +41,8 @@ namespace Backend.Utils
                 Issuer = "http://localhost:61955",
                 Audience = "http://localhost:4200",
                 Expires = DateTime.UtcNow.AddHours(30),
-                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256Signature),
+                // SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256Signature),
+                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
             };
             
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -2,6 +2,7 @@
 using Backend.Dtos;
 using Backend.Interfaces.Repositories.AuthRepo;
 using Backend.Model;
+using Backend.Repositories.StudentsRepo;
 using Backend.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,13 @@ namespace Backend.Controllers
     public class AuthController : ControllerBase
     {
         public IAuthRepository AuthRepository { get; set; }
+        public IStudentRepository StudentRepository { get; set; }
 
-        public AuthController(IAuthRepository authRepository)
+
+        public AuthController(IAuthRepository authRepository, IStudentRepository studentRepository)
         {
             AuthRepository = authRepository;
+            StudentRepository = studentRepository;
         }
 
         [HttpGet("users")]
@@ -49,6 +53,7 @@ namespace Backend.Controllers
             {
                 Email = userDto.Email,
                 Password = userDto.Password,
+                Role = "Admin"
             };
 
             AuthRepository.Register(user);
@@ -187,6 +192,108 @@ namespace Backend.Controllers
         }
 
 
+
+
+
+        [HttpPost("create-admin")]
+        [Authorize("Admin")]
+        public ActionResult<MessageResponseDto> CreateAdmin([FromBody] RegisterUserDto userDto)
+        {
+
+            User userExists = AuthRepository.GetUserByEmail(userDto.Email);
+
+            if (userExists != null)
+            {
+                return BadRequest(new MessageResponseDto
+                {
+                    Status = "Error",
+                    Message = "User already exists"
+                });
+            }
+
+            User user = new User
+            {
+                Email = userDto.Email,
+                Password = userDto.Password,
+                Role = "Admin"
+            };
+
+            AuthRepository.Register(user);
+
+            MessageResponseDto createResponseDto = new MessageResponseDto
+            {
+                Status = "Success",
+                Message = "User created successfully"
+            };
+
+            return Ok(createResponseDto);
+        }
+
+
+        [HttpPut("make-admin/{id}")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<MessageResponseDto> MakeAdmin(long id)
+        {
+            User user = AuthRepository.Get(id);
+
+            if (user == null)
+            {
+                return BadRequest(new MessageResponseDto
+                {
+                    Status = "Error",
+                    Message = "User does not exist"
+                });
+            }
+
+            user.Role = "Admin";
+
+            AuthRepository.Update(user);
+
+            MessageResponseDto updateResponseDto = new MessageResponseDto
+            {
+                Status = "Success",
+                Message = "User updated successfully"
+            };
+
+            return Ok(updateResponseDto);
+        }
+
+
+        [HttpPut("remove-admin/{id}")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<MessageResponseDto> RemoveAdmin(long id)
+        {
+            User user = AuthRepository.Get(id);
+
+            if (user == null)
+            {
+                return BadRequest(new MessageResponseDto
+                {
+                    Status = "Error",
+                    Message = "User does not exist"
+                });
+            }
+
+            user.Role = "Dismissed";
+
+            AuthRepository.Update(user);
+
+            MessageResponseDto updateResponseDto = new MessageResponseDto
+            {
+                Status = "Success",
+                Message = "User updated successfully"
+            };
+
+            return Ok(updateResponseDto);
+        }
+
+
+        [HttpGet("all-admins")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<IEnumerable<User>> GetAllAdmins()
+        {
+            return Ok(AuthRepository.GetAllAdmins());
+        }
 
     }
 }

@@ -25,11 +25,11 @@ namespace Backend.Controllers
             _mapper = map;
         }
 
-        [HttpGet("interests")]
-        public ActionResult<IEnumerable<Interest>> GetAllInterests()
-        {
-            return Ok(InterestRepository.Get());
-        }
+        // [HttpGet("interests")]
+        // public ActionResult<IEnumerable<Interest>> GetAllInterests()
+        // {
+        //     return Ok(InterestRepository.Get());
+        // }
 
         [HttpPost]
         public MessageResponseDto AddStudent([FromBody] AddUpdateStudentDto studentDto)

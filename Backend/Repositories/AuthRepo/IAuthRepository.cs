@@ -10,5 +10,7 @@ namespace Backend.Interfaces.Repositories.AuthRepo
         User Login(User user);
 
         User GetUserByEmail(string email);
+
+        List<User> GetAllAdmins();
     }
 }

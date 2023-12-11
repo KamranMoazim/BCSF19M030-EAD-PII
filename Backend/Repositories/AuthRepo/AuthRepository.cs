@@ -29,7 +29,6 @@ namespace Backend.Interfaces.Repositories.AuthRepo
 
             // user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             user.Password = passwordHash;
-            user.Role = "Student";
 
             _context.User.Add(user);
             _context.SaveChanges();
@@ -69,6 +68,11 @@ namespace Backend.Interfaces.Repositories.AuthRepo
             }
 
             return userExists;
+        }
+
+        public List<User> GetAllAdmins()
+        {
+            return _context.User.Where(u => u.Role != "Student").ToList();
         }
 
 
