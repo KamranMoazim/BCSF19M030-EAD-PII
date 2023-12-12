@@ -4,7 +4,6 @@ using Backend.Exceptions;
 
 // using Backend.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Middlewares

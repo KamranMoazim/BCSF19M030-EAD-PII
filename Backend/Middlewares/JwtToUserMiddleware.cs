@@ -20,9 +20,23 @@ namespace Backend.Middlewares
             {
                 var jwtHandler = new JwtSecurityTokenHandler();
 
+                Console.WriteLine("--------------- TOKEN : " + token);
+
+                token = token.ToString().Replace("Bearer ", string.Empty);
+
                 try
                 {
                     var jsonToken = jwtHandler.ReadToken(token) as JwtSecurityToken;
+                    // var jsonToken = jwtHandler.ReadJwtToken(token) as JwtSecurityToken;
+
+                    // var tokenTest = new System.IdentityModel.Tokens.JwtSecurityToken(jwt); 
+
+
+                    // var jsonToken = token.Replace("Bearer ", string.Empty);
+                    // var jsonToken = token.ToString().Replace("Bearer ", string.Empty);
+                    Console.WriteLine("--------------- JSON_TOKEN : " + jsonToken);
+                    // Console.WriteLine("--------------- JSON_TOKEN : " + tokenTest);
+
 
                     if (jsonToken != null)
                     {

@@ -24,12 +24,10 @@ namespace Backend.Utils
             {
                 new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()),
                 new Claim(ClaimTypes.Name, user.Email),
-                // new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                // new Claim(ClaimTypes.Role, user.UserType.ToString())
                 new Claim(ClaimTypes.Role, user.Role)
             };
 
-            // Console.WriteLine("UserType: " + user.Role.ToString());
+            Console.WriteLine("UserType: ----- " + user.Role.ToString());
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ByYM000OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SNM"));
 
@@ -41,13 +39,15 @@ namespace Backend.Utils
                 Issuer = "http://localhost:61955",
                 Audience = "http://localhost:4200",
                 Expires = DateTime.UtcNow.AddHours(30),
-                // SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256Signature),
-                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
+                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256Signature),
+                // SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
             };
             
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            // var token = new System.IdentityModel.Tokens.JwtSecurityToken(jwt);
+            //// var token = new System.IdentityModel.Tokens.JwtSecurityToken(jwt);
+
+            //var token = new System.IdentityModel.Tokens.JwtSecurityToken(jwt);
 
             return tokenHandler.WriteToken(token);
         }

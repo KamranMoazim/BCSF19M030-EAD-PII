@@ -104,7 +104,7 @@ namespace Backend.Controllers
 
 
         [HttpGet("me")]
-        [Authorize]
+        [Authorize(Roles = "Admin, Student")]
         public ActionResult<UserDto> GetMe()
         {
             try
@@ -196,7 +196,7 @@ namespace Backend.Controllers
 
 
         [HttpPost("create-admin")]
-        [Authorize("Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<MessageResponseDto> CreateAdmin([FromBody] RegisterUserDto userDto)
         {
 

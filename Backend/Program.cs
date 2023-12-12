@@ -151,8 +151,8 @@ app.UseMiddleware<ActivityLoggingMiddleware>();
 app.UseHttpsRedirection();
 
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
