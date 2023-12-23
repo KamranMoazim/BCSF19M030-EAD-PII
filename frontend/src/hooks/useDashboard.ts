@@ -11,12 +11,14 @@ const useDashboard = () => {
 
     const ActivityService = ActivityServiceCreator()
 
-    const DailyActivityCountsQuery = useQuery<DailyActivityCounts[], Error>({
-        // queryKey: ['todos'],
-        queryKey: CACHE_KEY_DASHBOARD,
-        queryFn: ActivityService.getDailyActivityCounts,
-        staleTime: 1000 * 60, // 1 minute
-    });
+    // const {data } = useQuery<DailyActivityCounts[], Error>({
+    //     // queryKey: ['todos'],
+    //     queryKey: CACHE_KEY_DASHBOARD,
+    //     queryFn: ActivityService.getDailyActivityCounts,
+    //     staleTime: 1000 * 60, // 1 minute
+    // });
+
+    // console.log(data)
 
     return {
         

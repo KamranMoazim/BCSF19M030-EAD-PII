@@ -55,9 +55,9 @@ namespace Backend.Constants
         public const OrderDirection DefaultOrderDirection = OrderDirection.Ascending;
         public const OrderBy DefaultOrderBy = OrderBy.Id;
         
-        public const string ADMIN = "Admin";
-        public const string SUB_ADMIN = "Admin";
-        public const string STUDENT = "Admin";
+        public const string ADMIN = "ADMIN";
+        public const string SUB_ADMIN = "SUB_ADMIN";
+        public const string STUDENT = "STUDENT";
         public const string DISMISSED = "Dismissed";
 
 

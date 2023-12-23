@@ -45,14 +45,14 @@ const router = createBrowserRouter([
     // },
 
     {
-        element: <PrivateRoutes allowedRoles={["Student", "SubAdmin", "Admin"]} />,
+        element: <PrivateRoutes allowedRoles={["STUDENT", "SUB_ADMIN", "ADMIN"]} />,
         children: [
             {path:"/", element:<Dashboard />, errorElement:<ErrorPage />},
         ]
     },
 
     {
-        element: <PrivateRoutes allowedRoles={["SubAdmin", "Admin"]} />,
+        element: <PrivateRoutes allowedRoles={["SUB_ADMIN", "ADMIN"]} />,
         children: [
             {path:"/degrees", element:<Degree />},
             {
@@ -68,7 +68,7 @@ const router = createBrowserRouter([
     },
 
     {
-        element: <PrivateRoutes allowedRoles={["Admin"]} />,
+        element: <PrivateRoutes allowedRoles={["ADMIN"]} />,
         children: [
             {path:"/staff", element:<SubstaffTable />},
         ]

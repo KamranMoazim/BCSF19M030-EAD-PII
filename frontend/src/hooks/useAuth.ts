@@ -1,28 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { CACHE_KEY_DASHBOARD } from "../constants/constants";
-import ActivityServiceCreator from "../services/activity-service"
-import { DailyActivityCounts } from "../types/Activity";
+import { CACHE_KEY_LOGIN, CACHE_KEY_REGISTER } from "../constants/constants";
+import AuthServiceCreator from "../services/auth-service"
+import { LoginResponse, RegisterOrLoginOrCreate } from "../types/Auth";
+import { Response } from "../types/General";
 
 
 
 
 const useAuth = () => {
 
-    const ActivityService = ActivityServiceCreator()
+    const AuthService = AuthServiceCreator()
 
-    const DailyActivityCountsQuery = useQuery<DailyActivityCounts[], Error>({
-        // queryKey: ['todos'],
-        queryKey: CACHE_KEY_DASHBOARD,
-        queryFn: ActivityService.getDailyActivityCounts,
-        staleTime: 1000 * 60, // 1 minute
-    });
+    const loginQuery = (loginData:RegisterOrLoginOrCreate) => AuthService.login(loginData)
+
+    const registerQuery = (registerData:RegisterOrLoginOrCreate) => AuthService.register(registerData)
+
 
     return {
-        // user:null
-        user:{
-            role:"Student"
-        }
+        loginQuery,
+        registerQuery
     }
 }
 

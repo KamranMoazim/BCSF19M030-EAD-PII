@@ -1,13 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import {
-    PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LineChart, Line,
-} from 'recharts';
 import Layout from '../Layout';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale,PointElement,LineElement,Title } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
+import useDashboard from '../hooks/useDashboard';
+import PieChartComponent from '../components/PieChartComponent';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+const generateRandomColors = (length:number) => {
+    const randomColor = () => Math.floor(Math.random() * 256);
+    const backgroundColor = Array.from({ length }, () => `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 0.2)`);
+    const borderColor = Array.from({ length }, () => `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 1)`);
+    return { backgroundColor, borderColor };
+};
 
+
+// ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, CategoryScale, LinearScale,PointElement,LineElement,Title,Tooltip,Legend);
 
 const Dashboard = () => {
+
+
+
+    // const {data} = useDashboard()
+    // console.log(data)
+
+
+    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+    const linedata = {
+        labels,
+        datasets: [
+            {
+            label: 'Dataset 1',
+            data: [1,2,3,4,5,5,6],
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+            {
+            label: 'Dataset 2',
+            data: [1,2,5,4,15,5,6],
+            borderColor: 'rgb(53, 162, 235)',
+            backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            },
+        ],
+    };
 
     const [interestData, setInterestData] = useState({
         topInterests: ['Interest1', 'Interest2', 'Interest3', 'Interest4', 'Interest5'],
@@ -15,7 +50,7 @@ const Dashboard = () => {
         distinctInterests: 10,
         provincialDistribution: {
             labels: ['Province1', 'Province2', 'Province3'],
-            data: [30, 40, 30],
+            data: [12, 19, 3],
         },
         submissionChart: {
             labels: ['Day1', 'Day2', 'Day3', 'Day4', 'Day5'],
@@ -58,8 +93,6 @@ const Dashboard = () => {
 
     // Use useEffect to simulate fetching data from the backend
     useEffect(() => {
-        // Fetch data from the backend and update state
-        // For now, we're using static data
     }, []);
 
 
@@ -97,34 +130,16 @@ const Dashboard = () => {
 
                 {/* Provincial Distribution */}
                 <div className="row mt-4">
-                    <div className="col-md-6">
-                        <h4>Provincial Distribution</h4>
-                        <PieChart width={400} height={400}>
-                            <Pie dataKey="value" data={interestData.provincialDistribution.data} cx={200} cy={200} outerRadius={80} fill="#8884d8">
-                                {interestData.provincialDistribution.data.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
+                    <div className="col-md-4">
+                        {/* <Pie data={interestData.provincialDistribution} />; */}
+                        <PieChartComponent 
+                            title='Provincial Distribution' 
+                            labels={interestData.provincialDistribution.labels} 
+                            data={interestData.provincialDistribution.data} 
+                        />
                     </div>
-                </div>
+                </div> 
 
-                {/* Submission Chart */}
-                <div className="row mt-4">
-                    <div className="col-md-6">
-                        <h4>Submission Chart</h4>
-                        <BarChart width={500} height={300} data={interestData.submissionChart.data}>
-                            <XAxis dataKey="name" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Bar dataKey="value" fill="#8884d8" />
-                        </BarChart>
-                    </div>
-                </div>
-
-                {/* ... (other Recharts charts) */}
             </div>
         </Layout>
     );

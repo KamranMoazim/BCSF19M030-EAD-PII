@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
+import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+
+    const {registerQuery} = useAuth();
+    const navigate = useNavigate()
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -8,7 +14,25 @@ const Signup = () => {
     const handleSignup = () => {
         // Implement signup logic here (e.g., connect to backend for user registration)
         console.log('Signing up with:', email, password, confirmPassword);
+
+        if(password == confirmPassword){
+            registerQuery({
+                email,
+                password
+            })
+                .then((res) => {
+                    navigate("/login")
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            // toast
+        }
     };
+
+
+
 
     return (
         <div className="container mt-4">

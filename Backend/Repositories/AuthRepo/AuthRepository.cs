@@ -41,6 +41,9 @@ namespace Backend.Interfaces.Repositories.AuthRepo
         
         public User GetUserByEmail(string email)
         {
+            // _context.User.RemoveRange(_context.User.ToList());
+            // _context.SaveChanges();
+
             return _context.User.FirstOrDefault(u => u.Email == email);
         }
 

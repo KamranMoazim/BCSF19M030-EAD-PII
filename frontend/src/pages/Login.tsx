@@ -1,12 +1,34 @@
 import React, { useState } from 'react';
+import useAuthStore from '../state-management/auth/authStore';
+import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+
+    const authStore = useAuthStore();
+    const {loginQuery} = useAuth();
+    const navigate = useNavigate()
+
+    const [email, setEmail] = useState('kamran@example.com');
+    const [password, setPassword] = useState('12345678');
 
     const handleLogin = () => {
         // Implement login logic here (e.g., connect to backend for authentication)
         console.log('Logging in with:', email, password);
+
+        loginQuery({
+            email,
+            password
+        })
+            .then((res) => {
+                // console.log(res)
+                authStore.login(res)
+                navigate("/")
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
     };
 
     return (
