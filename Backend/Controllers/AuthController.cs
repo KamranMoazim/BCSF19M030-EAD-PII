@@ -26,10 +26,16 @@ namespace Backend.Controllers
         }
 
         [HttpGet("users")]
-        [AllowAnonymous]
-        public ActionResult<IEnumerable<UserDto>> GetAllUsers()
+        // [AllowAnonymous]
+        // public ActionResult<IEnumerable<UserDto>> GetAllUsers()
+        public ActionResult<PagedList<User>> GetAllUsers([FromQuery] PagingInfo pagingInfo)
         {
-            return Ok(AuthRepository.Get());
+            Predicate<User> allUsersCriteria = x => true;
+
+            // return Ok(AuthRepository.Get());
+            var result = AuthRepository.Page(allUsersCriteria, pagingInfo);
+
+            return Ok(result);
         }
 
 
@@ -96,7 +102,8 @@ namespace Backend.Controllers
                 User = new UserDto
                 {
                     ID = user.ID,
-                    Email = user.Email
+                    Email = user.Email,
+                    Role = user.Role
                 }
             };
 
@@ -151,49 +158,47 @@ namespace Backend.Controllers
 
 
 
-        [HttpPost("forgot-password")]
-        [AllowAnonymous]
-        public ActionResult<MessageResponseDto> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
-        {
-            try
-            {
-                // Check if the email exists in your system
-                var user = AuthRepository.GetUserByEmail(forgotPasswordDto.Email);
+        // [HttpPost("forgot-password")]
+        // [AllowAnonymous]
+        // public ActionResult<MessageResponseDto> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+        // {
+        //     try
+        //     {
+        //         // Check if the email exists in your system
+        //         var user = AuthRepository.GetUserByEmail(forgotPasswordDto.Email);
 
-                if (user == null)
-                {
-                    // Return a generic response to avoid leaking information about registered emails
-                    return Ok(new MessageResponseDto
-                    {
-                        Status = "Success",
-                        Message = "If the email exists in our system, we have sent a password reset link to your email."
-                    });
-                }
+        //         if (user == null)
+        //         {
+        //             // Return a generic response to avoid leaking information about registered emails
+        //             return Ok(new MessageResponseDto
+        //             {
+        //                 Status = "Success",
+        //                 Message = "If the email exists in our system, we have sent a password reset link to your email."
+        //             });
+        //         }
 
-                // Generate a password reset token
-                string resetToken = AuthUtils.GeneratePasswordResetToken(user);
+        //         // Generate a password reset token
+        //         string resetToken = AuthUtils.GeneratePasswordResetToken(user);
 
-                // Here, you might want to send an email to the user with the reset link or token
-                // Include the reset token in the reset link or use it to validate the reset request
+        //         // Here, you might want to send an email to the user with the reset link or token
+        //         // Include the reset token in the reset link or use it to validate the reset request
 
-                // In a real-world scenario, you would send an email with a link like:
-                // "https://yourdomain.com/reset-password?token=resetToken"
+        //         // In a real-world scenario, you would send an email with a link like:
+        //         // "https://yourdomain.com/reset-password?token=resetToken"
 
-                return Ok(new MessageResponseDto
-                {
-                    Status = "Success",
-                    Message = "If the email exists in our system, we have sent a password reset link to your email."
-                });
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it accordingly
-                Console.WriteLine($"An error occurred while processing the forgot password request: {ex.Message}");
-                return StatusCode(500, "Internal Server Error");
-            }
-        }
-
-
+        //         return Ok(new MessageResponseDto
+        //         {
+        //             Status = "Success",
+        //             Message = "If the email exists in our system, we have sent a password reset link to your email."
+        //         });
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         // Log the exception or handle it accordingly
+        //         Console.WriteLine($"An error occurred while processing the forgot password request: {ex.Message}");
+        //         return StatusCode(500, "Internal Server Error");
+        //     }
+        // }
 
 
 
@@ -218,10 +223,12 @@ namespace Backend.Controllers
 
 
 
-        [HttpPost("create-new-sub-admin")]
+
+
+        [HttpPost("create-new-user")]
         // [Authorize(Roles = "Admin")]
         [Authorize(Roles = Constants.Constants.ADMIN)]
-        public ActionResult<MessageResponseDto> CreateSubAdmin([FromBody] RegisterUserDto userDto)
+        public ActionResult<MessageResponseDto> CreateNewUser([FromBody] CreateUserDto userDto)
         {
 
             User userExists = AuthRepository.GetUserByEmail(userDto.Email);
@@ -235,11 +242,13 @@ namespace Backend.Controllers
                 });
             }
 
+
+
             User user = new User
             {
                 Email = userDto.Email,
                 Password = userDto.Password,
-                Role = Constants.Constants.SUB_ADMIN
+                Role = userDto.Role
             };
 
             AuthRepository.Register(user);
@@ -254,7 +263,7 @@ namespace Backend.Controllers
         }
 
 
-        [HttpPut("dismiss-sub-admin/{id}")]
+        [HttpPut("dismiss-user/{id}")]
         // [Authorize(Roles = "Admin")]
         [Authorize(Roles = Constants.Constants.ADMIN)]
         public ActionResult<MessageResponseDto> DismissSubAdmin(long id)
@@ -283,10 +292,10 @@ namespace Backend.Controllers
             return Ok(updateResponseDto);
         }
 
-        [HttpPut("make-sub-admin-again/{id}")]
+        [HttpPut("update-user-role/{id}")]
         // [Authorize(Roles = "Admin")]
         [Authorize(Roles = Constants.Constants.ADMIN)]
-        public ActionResult<MessageResponseDto> MakeSubAdminAgain(long id)
+        public ActionResult<MessageResponseDto> MakeSubAdminAgain(long id, [FromBody] UdpateUserDto udpateUserDto)
         {
             User user = AuthRepository.Get(id);
 
@@ -299,7 +308,8 @@ namespace Backend.Controllers
                 });
             }
 
-            user.Role = Constants.Constants.SUB_ADMIN;
+            // user.Role = Constants.Constants.SUB_ADMIN;
+            user.Role = udpateUserDto.Role;
 
             AuthRepository.Update(user);
 
@@ -324,63 +334,6 @@ namespace Backend.Controllers
 
 
 
-        [HttpPut("dismiss-admin/{id}")]
-        // [Authorize(Roles = "Admin")]
-        [Authorize(Roles = Constants.Constants.ADMIN)]
-        public ActionResult<MessageResponseDto> DismissAdmin(long id)
-        {
-            User user = AuthRepository.Get(id);
-
-            if (user == null)
-            {
-                return BadRequest(new MessageResponseDto
-                {
-                    Status = "Error",
-                    Message = "User does not exist"
-                });
-            }
-
-            user.Role = Constants.Constants.DISMISSED;
-
-            AuthRepository.Update(user);
-
-            MessageResponseDto updateResponseDto = new MessageResponseDto
-            {
-                Status = "Success",
-                Message = "User updated successfully"
-            };
-
-            return Ok(updateResponseDto);
-        }
-
-        [HttpPut("make-admin-again/{id}")]
-        // [Authorize(Roles = "Admin")]
-        [Authorize(Roles = Constants.Constants.ADMIN)]
-        public ActionResult<MessageResponseDto> MakeAdminAgain(long id)
-        {
-            User user = AuthRepository.Get(id);
-
-            if (user == null)
-            {
-                return BadRequest(new MessageResponseDto
-                {
-                    Status = "Error",
-                    Message = "User does not exist"
-                });
-            }
-
-            user.Role = Constants.Constants.ADMIN;
-
-            AuthRepository.Update(user);
-
-            MessageResponseDto updateResponseDto = new MessageResponseDto
-            {
-                Status = "Success",
-                Message = "User updated successfully"
-            };
-
-            return Ok(updateResponseDto);
-        }
 
 
 
@@ -389,24 +342,7 @@ namespace Backend.Controllers
 
 
 
-        [HttpGet("all-admins")]
-        // [Authorize(Roles = "Admin")]
-        [Authorize(Roles = Constants.Constants.ADMIN)]
-        public ActionResult<IEnumerable<User>> GetAllAdmins()
-        {
-            return Ok(AuthRepository.GetAllAdmins());
-        }
-
-
-
-
-
-
-
-
-
-
-        [HttpPut("update-password/{id}")]
+        [HttpPut("update-user-password/{id}")]
         // [Authorize(Roles = "Admin")]
         [Authorize(Roles = Constants.Constants.ADMIN)]
         public ActionResult<MessageResponseDto> UpdateUserPassword(long id)

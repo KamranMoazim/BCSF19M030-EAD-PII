@@ -143,7 +143,8 @@ namespace Backend.Controllers
 
 
         [HttpGet("get-provincial-distribution")]
-        public ActionResult<Dictionary<string, int>> GetProvincialDistribution()
+        // public ActionResult<Dictionary<string, int>> GetProvincialDistribution()
+        public ActionResult<List<KeyValueDto>> GetProvincialDistribution()
         {
             return Ok(StudentRepository.GetProvincialDistribution());
         }
@@ -155,33 +156,38 @@ namespace Backend.Controllers
         }
 
         [HttpGet("get-age-distribution")]
-        public ActionResult<Dictionary<int, int>> GetAgeDistribution()
+        // public ActionResult<Dictionary<int, int>> GetAgeDistribution()
+        public ActionResult<List<KeyValueDto>> GetAgeDistribution()
         {
             return Ok(StudentRepository.GetAgeDistribution());
         }
 
         [HttpGet("get-department-distribution")]
-        public ActionResult<Dictionary<string, int>> GetDepartmentDistribution()
+        // public ActionResult<Dictionary<string, int>> GetDepartmentDistribution()
+        public ActionResult<List<KeyValueDto>> GetDepartmentDistribution()
         {
             return Ok(StudentRepository.GetDepartmentDistribution());
         }
 
         [HttpGet("get-degree-distribution")]
-        public Dictionary<string, int> GetDegreeDistribution()
+        // public Dictionary<string, int> GetDegreeDistribution()
+        public ActionResult<List<KeyValueDto>> GetDegreeDistribution()
         {
-            return StudentRepository.GetDegreeDistribution();
+            return Ok(StudentRepository.GetDegreeDistribution());
         }
 
         [HttpGet("get-gender-distribution")]
-        public Dictionary<string, int> GetGenderDistribution()
+        // public Dictionary<string, int> GetGenderDistribution()
+        public ActionResult<List<KeyValueDto>> GetGenderDistribution()
         {
-            return StudentRepository.GetGenderDistribution();
+            return Ok(StudentRepository.GetGenderDistribution());
         }
 
         [HttpGet("get-students-status-grid")]
-        public Dictionary<string, int> GetStudentsStatusGrid()
+        // public Dictionary<string, int> GetStudentsStatusGrid()
+        public ActionResult<List<KeyValueDto>> GetStudentsStatusGrid()
         {
-            return StudentRepository.GetStudentsStatusGrid();
+            return Ok(StudentRepository.GetStudentsStatusGrid());
         }
 
 

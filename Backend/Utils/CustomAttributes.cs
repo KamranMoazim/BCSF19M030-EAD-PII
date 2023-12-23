@@ -35,4 +35,19 @@ namespace Backend.Utils
         }
     }
 
+    public class RoleAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var allowedRoles = new List<string>{Constants.Constants.STUDENT, Constants.Constants.ADMIN, Constants.Constants.SUB_ADMIN, Constants.Constants.DISMISSED};
+
+            if (value != null && !allowedRoles.Contains(value.ToString()))
+            {
+                return new ValidationResult($"The {validationContext.DisplayName} field is not a valid Role.");
+            }
+
+            return ValidationResult.Success;
+        }
+    }
+
 }

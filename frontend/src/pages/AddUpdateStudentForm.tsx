@@ -1,9 +1,17 @@
 import React from 'react';
 import DropdownInput from '../components/DropdownInput';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
-const AddStudentForm = () => {
+const AddUpdateStudentForm = () => {
 
-    
+    const params = useParams()
+    const [searchParams, setSearchParams] = useSearchParams()
+    console.log(searchParams.get("OrderBy"))
+    console.log(searchParams)
+
+    const lc = useLocation()
+    console.log(lc)
+
 
     return (
         <div>
@@ -112,4 +120,4 @@ const AddStudentForm = () => {
     );
 };
 
-export default AddStudentForm;
+export default AddUpdateStudentForm;

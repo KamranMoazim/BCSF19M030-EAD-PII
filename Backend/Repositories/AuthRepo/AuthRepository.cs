@@ -1,9 +1,12 @@
 
 
 using AutoMapper;
+using Backend.Constants;
+using Backend.Dtos;
 using Backend.Exceptions;
 using Backend.Model;
 using Backend.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Interfaces.Repositories.AuthRepo
 {
@@ -114,7 +117,64 @@ namespace Backend.Interfaces.Repositories.AuthRepo
 
         public PagedList<User> Page(Predicate<User> criteria, PagingInfo pagingInfo)
         {
-            throw new NotImplementedException();
+
+            // Apply default values to the pagingInfo object
+            // pagingInfo.ApplyDefaults();
+
+            const int DefaultPageNumber = 1;
+            const int DefaultPageSize = 10;
+            const string DefaultOrderBy = "role"; // Provide your default value
+            const OrderDirection DefaultOrderDirection = Constants.OrderDirection.Descending; // Provide your default value
+
+
+            pagingInfo.PageNumber ??= DefaultPageNumber;
+            pagingInfo.PageSize ??= DefaultPageSize;
+            pagingInfo.OrderBy ??= DefaultOrderBy;
+            pagingInfo.OrderDirection ??= DefaultOrderDirection;
+
+            int PageNumber = DefaultPageNumber;
+            int PageSize = DefaultPageSize;
+            string OrderBy = DefaultOrderBy;
+            OrderDirection OrderDirection = DefaultOrderDirection;
+
+            // var query = _context.Student.Where(x => criteria(x)).AsQueryable();
+            var query = _context.User.AsQueryable();
+
+            // int skip = (pagingInfo.PageNumber - 1) * pagingInfo.PageSize;
+            int skip = (PageNumber - 1) * PageSize;
+
+            var orderByLower = pagingInfo.OrderBy.ToLower();
+            var orderProperty = typeof(Student).GetProperties()
+                .FirstOrDefault(prop => prop.Name.ToLower() == orderByLower);
+
+            if (orderProperty != null)
+            {
+                if (pagingInfo.OrderDirection == OrderDirection.Ascending)
+                {
+                    query = query.OrderBy(x => EF.Property<object>(x, orderProperty.Name));
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => EF.Property<object>(x, orderProperty.Name));
+                }
+            }
+
+            query = query.Skip(skip!).Take(pagingInfo.PageSize??10);
+
+            var users = query.ToList();
+
+            // var totalItems = _context.Student.Count(x => criteria(x));
+            var totalItems = _context.Student.Count();
+
+            return new PagedList<User>
+            (
+                users,
+                totalItems,
+                // totalItems / pagingInfo.PageSize <= 0 ? 1 : totalItems / pagingInfo.PageSize
+                totalItems! / PageSize! <= 0 ? 1 : totalItems! / PageSize!
+            );
+
+
         }
 
         public User Save(User dto)
@@ -155,5 +215,11 @@ namespace Backend.Interfaces.Repositories.AuthRepo
 
             return user;
         }
+
+
+
+
+
+
     }
 }

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {
     PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, LineChart, Line,
 } from 'recharts';
+import Layout from '../Layout';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
-    
+
 
 const Dashboard = () => {
 
@@ -63,67 +64,69 @@ const Dashboard = () => {
 
 
     return (
-        <div className="container mt-4">
-            <h1>Dashboard</h1>
+        <Layout>
+            <div className="container mt-4">
+                <h1>Dashboard</h1>
 
-            {/* Top 5 Interests */}
-            <div className="row">
-                {interestData.topInterests.map((interest, index) => (
-                    <div key={index} className="col-md-2">
-                        <div className="card bg-success text-white">
-                            <div className="card-body">{interest}</div>
+                {/* Top 5 Interests */}
+                <div className="row">
+                    {interestData.topInterests.map((interest, index) => (
+                        <div key={index} className="col-md-2">
+                            <div className="card bg-success text-white">
+                                <div className="card-body">{interest}</div>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
 
-            {/* Bottom 5 Interests */}
-            <div className="row mt-3">
-                {interestData.bottomInterests.map((interest, index) => (
-                    <div key={index} className="col-md-2">
-                        <div className="card bg-danger text-white">
-                            <div className="card-body">{interest}</div>
+                {/* Bottom 5 Interests */}
+                <div className="row mt-3">
+                    {interestData.bottomInterests.map((interest, index) => (
+                        <div key={index} className="col-md-2">
+                            <div className="card bg-danger text-white">
+                                <div className="card-body">{interest}</div>
+                            </div>
                         </div>
+                    ))}
+                </div>
+
+                {/* Distinct Interests */}
+                <div className="mt-4">
+                    <h4>Distinct Interests: {interestData.distinctInterests}</h4>
+                </div>
+
+                {/* Provincial Distribution */}
+                <div className="row mt-4">
+                    <div className="col-md-6">
+                        <h4>Provincial Distribution</h4>
+                        <PieChart width={400} height={400}>
+                            <Pie dataKey="value" data={interestData.provincialDistribution.data} cx={200} cy={200} outerRadius={80} fill="#8884d8">
+                                {interestData.provincialDistribution.data.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip />
+                        </PieChart>
                     </div>
-                ))}
-            </div>
-
-            {/* Distinct Interests */}
-            <div className="mt-4">
-                <h4>Distinct Interests: {interestData.distinctInterests}</h4>
-            </div>
-
-            {/* Provincial Distribution */}
-            <div className="row mt-4">
-                <div className="col-md-6">
-                    <h4>Provincial Distribution</h4>
-                    <PieChart width={400} height={400}>
-                        <Pie dataKey="value" data={interestData.provincialDistribution.data} cx={200} cy={200} outerRadius={80} fill="#8884d8">
-                            {interestData.provincialDistribution.data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                        </Pie>
-                        <Tooltip />
-                    </PieChart>
                 </div>
-            </div>
 
-            {/* Submission Chart */}
-            <div className="row mt-4">
-                <div className="col-md-6">
-                    <h4>Submission Chart</h4>
-                    <BarChart width={500} height={300} data={interestData.submissionChart.data}>
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="value" fill="#8884d8" />
-                    </BarChart>
+                {/* Submission Chart */}
+                <div className="row mt-4">
+                    <div className="col-md-6">
+                        <h4>Submission Chart</h4>
+                        <BarChart width={500} height={300} data={interestData.submissionChart.data}>
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="value" fill="#8884d8" />
+                        </BarChart>
+                    </div>
                 </div>
-            </div>
 
-            {/* ... (other Recharts charts) */}
-        </div>
+                {/* ... (other Recharts charts) */}
+            </div>
+        </Layout>
     );
 };
 

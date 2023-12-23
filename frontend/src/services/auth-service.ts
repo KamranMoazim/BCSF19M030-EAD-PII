@@ -1,18 +1,13 @@
 
 import { AxiosInstance } from "axios";
 import apiClient from "./api-client";
-import {  LoginResponse, RegisterOrLoginOrCreate, User } from "../types/Auth";
-import { Response } from "../types/General";
+import {  AdminViewUser, LoginResponse, RegisterOrLoginOrCreate, User } from "../types/Auth";
+import { QueryParams, QueryResult, Response } from "../types/General";
 
 
 // /Student?PageNumber=1&PageSize=10&OrderBy=fullName&OrderDirection=0
 
-interface QueryParams {
-    PageNumber : number
-    PageSize : number
-    OrderBy : string
-    OrderDirection : 0 | 1
-}
+
 
 
 
@@ -25,12 +20,26 @@ class AuthService {
         this.apiClient = apiClient
     }
 
+    getAllWithQuery({OrderBy, OrderDirection, PageNumber, PageSize}:QueryParams) {
+        const controller = new AbortController();
+
+        const queryParams: Record<string, any> = {};
+        if (OrderBy) queryParams.OrderBy = OrderBy;
+        if (OrderDirection) queryParams.OrderDirection = OrderDirection;
+        if (PageNumber) queryParams.PageNumber = PageNumber;
+        if (PageSize) queryParams.PageSize = PageSize;
+
+        const request = this.apiClient.get<QueryResult<AdminViewUser>>(this.url, { params: queryParams, signal: controller.signal }).then(res => res.data);;
+
+        return { request, cancel: () => controller.abort() };
+    }
+
     register(registerData:RegisterOrLoginOrCreate) {
-        return this.apiClient.post<Response>(`${this.url}/register`, registerData);
+        return this.apiClient.post<Response>(`${this.url}/register`, registerData).then(res => res.data);
     }
 
     login(loginData:RegisterOrLoginOrCreate) {
-        return this.apiClient.post<LoginResponse>(`${this.url}/login`, loginData);
+        return this.apiClient.post<LoginResponse>(`${this.url}/login`, loginData).then(res => res.data);
     }
 
     me() {
@@ -40,32 +49,32 @@ class AuthService {
 
 
     createNewSubAdmin(userData:RegisterOrLoginOrCreate) {
-        return this.apiClient.post<Response>(`${this.url}/create-new-sub-admin`, userData);
+        return this.apiClient.post<Response>(`${this.url}/create-new-sub-admin`, userData).then(res => res.data);
     }
 
     dismissSubAdmin() {
-        return this.apiClient.put<Response>(`${this.url}/dismiss-sub-admin/{id}`);
+        return this.apiClient.put<Response>(`${this.url}/dismiss-sub-admin/{id}`).then(res => res.data);
     }
 
     makeSubAdminAgain() {
-        return this.apiClient.put<Response>(`${this.url}/make-sub-admin-again/{id}`);
+        return this.apiClient.put<Response>(`${this.url}/make-sub-admin-again/{id}`).then(res => res.data);
     }
 
 
 
     dismissAdmin() {
-        return this.apiClient.post<Response>(`${this.url}/dismiss-admin/{id}`);
+        return this.apiClient.post<Response>(`${this.url}/dismiss-admin/{id}`).then(res => res.data);
     }
 
     makeAdminAgain() {
-        return this.apiClient.put<Response>(`${this.url}/make-admin-again/{id}`);
+        return this.apiClient.put<Response>(`${this.url}/make-admin-again/{id}`).then(res => res.data);
     }
 
 
 
 
     updatePassword() {
-        return this.apiClient.put<Response>(`${this.url}/update-password/{}`);
+        return this.apiClient.put<Response>(`${this.url}/update-password/{}`).then(res => res.data);
     }
 
     // getAll() {

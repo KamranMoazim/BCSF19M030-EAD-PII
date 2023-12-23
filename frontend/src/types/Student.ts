@@ -45,3 +45,16 @@ export interface Student {
 }
 
 
+export interface Distributions {
+    // "key": "string",
+    // "value": "string"
+    key: string
+    value: string
+}
+
+export interface DailyStudentCreationData {
+    // "date": "2023-12-11T00:00:00",
+    // "studentCount": 2
+    date: Date
+    studentCount: number
+}

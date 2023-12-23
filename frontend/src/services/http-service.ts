@@ -17,21 +17,21 @@ export class HttpService<T extends Entity> {
     getAll() {
         const controller = new AbortController();
 
-        const request = this.apiClient.get<T>(this.url, { signal: controller.signal });
+        const request = this.apiClient.get<T>(this.url, { signal: controller.signal }).then(res => res.data);
 
         return { request, cancel: () => controller.abort() };
     }
 
     delete(id:number) {
-        return this.apiClient.delete(`${this.url}/${id}`);
+        return this.apiClient.delete(`${this.url}/${id}`).then(res => res.data);
     }
 
     create(entity:T) {
-        return this.apiClient.post(this.url, entity);
+        return this.apiClient.post(this.url, entity).then(res => res.data);
     }
 
     update(id:number, entity:T) {
-        return this.apiClient.put(`${this.url}/${id}`, entity);
+        return this.apiClient.put(`${this.url}/${id}`, entity).then(res => res.data);
     }
 }
 

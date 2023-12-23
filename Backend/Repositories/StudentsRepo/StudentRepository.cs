@@ -24,15 +24,21 @@ namespace Backend.Repositories.StudentsRepo
 
 
         // ISudentRepository implementation
-        public Dictionary<string, int> GetProvincialDistribution()
+        // public Dictionary<string, int> GetProvincialDistribution()
+        public List<KeyValueDto> GetProvincialDistribution()
         {
             // Assuming that the province information is in the City property
             var provincialDistribution = _context.Student
-                .GroupBy(s => s.City)
+                .Where(s => s.City != null)
+                // .GroupBy(s => s.City)
+                .AsEnumerable() // Switch to client-side evaluation
+                .GroupBy(s => s.City, StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(g => g.Key, g => g.Count());
 
-            return provincialDistribution;
+            return DictionaryToList(provincialDistribution);
         }
+
+
 
         public List<DailyStudentCreationDto> GetDailyStudentCreationData()
         {
@@ -53,11 +59,14 @@ namespace Backend.Repositories.StudentsRepo
             return dailyCreationData;
         }
 
-        public Dictionary<int, int> GetAgeDistribution()
+        // public Dictionary<int, int> GetAgeDistribution()
+        public List<KeyValueDto> GetAgeDistribution()
         {
             var today = DateTime.UtcNow.Date.ToDateOnly(); // using extension method, see Utils/HelperFuncs.cs
+
             var ageDistribution = _context.Student
                 .Where(s => s.DateOfBirth != null)
+                .ToList() // Fetch data from the database before applying the projection
                 .Select(s => new
                 {
                     Age = HelperFuncs.CalculateAge(s.DateOfBirth, today),
@@ -66,39 +75,49 @@ namespace Backend.Repositories.StudentsRepo
                 .OrderBy(g => g.Key)
                 .ToDictionary(g => g.Key, g => g.Count());
 
-            return ageDistribution;
+            // return ageDistribution;
+
+
+            return DictionaryToList(ageDistribution);
         }
 
-        public Dictionary<string, int> GetDepartmentDistribution()
+        // public Dictionary<string, int> GetDepartmentDistribution()
+        public List<KeyValueDto> GetDepartmentDistribution()
         {
             var departmentDistribution = _context.Student
                 .Where(s => !string.IsNullOrEmpty(s.Department))
                 .GroupBy(s => s.Department)
                 .ToDictionary(g => g.Key, g => g.Count());
 
-            return departmentDistribution;
+            // return departmentDistribution;
+            return DictionaryToList(departmentDistribution);
         }
 
-        public Dictionary<string, int> GetDegreeDistribution()
+        // public Dictionary<string, int> GetDegreeDistribution()
+        public List<KeyValueDto> GetDegreeDistribution()
         {
             var degreeDistribution = _context.Student
                 .Where(s => !string.IsNullOrEmpty(s.DegreeTitle))
                 .GroupBy(s => s.DegreeTitle)
                 .ToDictionary(g => g.Key, g => g.Count());
 
-            return degreeDistribution;
+            // return degreeDistribution;
+            return DictionaryToList(degreeDistribution);
         }
 
-        public Dictionary<string, int> GetGenderDistribution()
+        // public Dictionary<string, int> GetGenderDistribution()
+        public List<KeyValueDto> GetGenderDistribution()
         {
             var genderDistribution = _context.Student
                 .GroupBy(s => s.Gender ? "Male" : "Female")
                 .ToDictionary(g => g.Key, g => g.Count());
 
-            return genderDistribution;
+            // return genderDistribution;
+            return DictionaryToList(genderDistribution);
         }
 
-        public Dictionary<string, int> GetStudentsStatusGrid(int daysThreshold = 30)
+        // public Dictionary<string, int> GetStudentsStatusGrid(int daysThreshold = 30)
+        public List<KeyValueDto> GetStudentsStatusGrid(int daysThreshold = 30)
         {
             var currentDate = DateOnly.FromDateTime(DateTime.UtcNow.Date);
 
@@ -124,7 +143,8 @@ namespace Backend.Repositories.StudentsRepo
                 {"Graduated", numberOfStudentsGraduated}
             };
 
-            return studentsStatusGrid;
+            // return studentsStatusGrid;
+            return DictionaryToList(studentsStatusGrid);
         }
 
 
@@ -280,6 +300,44 @@ namespace Backend.Repositories.StudentsRepo
         //     );
         // }
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private static List<KeyValueDto> DictionaryToList(Dictionary<string, int> provincialDistribution)
+        {
+            var keyValueDtoList = provincialDistribution.Select(kv => new KeyValueDto
+            {
+                Key = kv.Key,
+                Value = kv.Value.ToString() // Convert count to string, assuming Value is of type string in KeyValueDto
+            }).ToList();
+
+            return keyValueDtoList;
+        }
+
+        private static List<KeyValueDto> DictionaryToList(Dictionary<int, int> provincialDistribution)
+        {
+            var keyValueDtoList = provincialDistribution.Select(kv => new KeyValueDto
+            {
+                Key = kv.Key.ToString(),
+                Value = kv.Value.ToString() // Convert count to string, assuming Value is of type string in KeyValueDto
+            }).ToList();
+
+            return keyValueDtoList;
+        }
     
     }
 }

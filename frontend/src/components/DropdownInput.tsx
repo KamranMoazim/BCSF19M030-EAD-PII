@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select, { components } from "react-select";
 
 
-const CustomInput = (props) => {
+const CustomInput = (props:any) => {
     const { maxLength } = props.selectProps;
     const inputProps = { ...props, maxLength };
 
@@ -22,7 +22,6 @@ const DropdownInput = () => {
         <Select
             options={options}
             components={{ Input: CustomInput }}
-            maxLength="4"
         />
     );
 };
