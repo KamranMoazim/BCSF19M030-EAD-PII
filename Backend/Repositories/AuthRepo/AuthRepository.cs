@@ -140,5 +140,20 @@ namespace Backend.Interfaces.Repositories.AuthRepo
 
             return dto;
         }
+
+        public User UpdatePassword(User user)
+        {
+            int salt = 12;
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password, salt);
+            // bool correctPassword = BCrypt.Net.BCrypt.Verify(storedPassword, passwordHash);
+
+            // user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.Password = passwordHash;
+
+            _context.User.Update(user);
+            _context.SaveChanges();
+
+            return user;
+        }
     }
 }

@@ -1,7 +1,7 @@
 import axios, {CanceledError} from "axios";
 
 const apiClient = axios.create({
-    baseURL: "https://jsonplaceholder.typicode.com"
+    baseURL: "http://0.0.0.0:9090/api"
 });
 
 

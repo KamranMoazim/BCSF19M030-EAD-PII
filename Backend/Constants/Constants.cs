@@ -54,6 +54,13 @@ namespace Backend.Constants
         public const int DefaultPageNumber = 1;
         public const OrderDirection DefaultOrderDirection = OrderDirection.Ascending;
         public const OrderBy DefaultOrderBy = OrderBy.Id;
+        
+        public const string ADMIN = "Admin";
+        public const string SUB_ADMIN = "Admin";
+        public const string STUDENT = "Admin";
+        public const string DISMISSED = "Dismissed";
+
+
 
         public static List<string> AllDepartements = new List<string> 
         {

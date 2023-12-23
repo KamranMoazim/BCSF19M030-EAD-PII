@@ -1,7 +1,7 @@
 import apiClient from "./api-client";
 
-class HttpService {
-    constructor(url = "/users") {
+class DashboardService {
+    constructor(url = "") {
         this.url = url;
     }
 
@@ -26,6 +26,6 @@ class HttpService {
     }
 }
 
-const create = (endpoint) => new HttpService(endpoint);
+const create = (endpoint) => new DashboardService(endpoint);
 
 export default create;

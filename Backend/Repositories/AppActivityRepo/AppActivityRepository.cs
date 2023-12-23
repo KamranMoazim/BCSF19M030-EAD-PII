@@ -133,7 +133,7 @@ namespace Backend.Repositories.AppActivityRepo
             return hourlyActivityCounts;
         }
 
-        private string FormatHour(int hour)
+        private static string FormatHour(int hour)
         {
             return new DateTime(2023, 1, 1, hour, 0, 0).ToString("h tt"); // Assumes 2023 is a non-leap year
         }

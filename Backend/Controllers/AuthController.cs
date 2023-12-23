@@ -53,7 +53,8 @@ namespace Backend.Controllers
             {
                 Email = userDto.Email,
                 Password = userDto.Password,
-                Role = "Admin"
+                // Role = "Student"
+                Role = Constants.Constants.STUDENT
             };
 
             AuthRepository.Register(user);
@@ -104,7 +105,8 @@ namespace Backend.Controllers
 
 
         [HttpGet("me")]
-        [Authorize(Roles = "Admin, Student")]
+        // [Authorize(Roles = "Admin, Student")]
+        [Authorize(Roles = $"{Constants.Constants.ADMIN}, {Constants.Constants.SUB_ADMIN}, {Constants.Constants.STUDENT}")]
         public ActionResult<UserDto> GetMe()
         {
             try
@@ -195,9 +197,31 @@ namespace Backend.Controllers
 
 
 
-        [HttpPost("create-admin")]
-        [Authorize(Roles = "Admin")]
-        public ActionResult<MessageResponseDto> CreateAdmin([FromBody] RegisterUserDto userDto)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpPost("create-new-sub-admin")]
+        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
+        public ActionResult<MessageResponseDto> CreateSubAdmin([FromBody] RegisterUserDto userDto)
         {
 
             User userExists = AuthRepository.GetUserByEmail(userDto.Email);
@@ -215,7 +239,7 @@ namespace Backend.Controllers
             {
                 Email = userDto.Email,
                 Password = userDto.Password,
-                Role = "Admin"
+                Role = Constants.Constants.SUB_ADMIN
             };
 
             AuthRepository.Register(user);
@@ -230,9 +254,10 @@ namespace Backend.Controllers
         }
 
 
-        [HttpPut("make-admin/{id}")]
-        [Authorize(Roles = "Admin")]
-        public ActionResult<MessageResponseDto> MakeAdmin(long id)
+        [HttpPut("dismiss-sub-admin/{id}")]
+        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
+        public ActionResult<MessageResponseDto> DismissSubAdmin(long id)
         {
             User user = AuthRepository.Get(id);
 
@@ -245,7 +270,36 @@ namespace Backend.Controllers
                 });
             }
 
-            user.Role = "Admin";
+            user.Role = Constants.Constants.DISMISSED;
+
+            AuthRepository.Update(user);
+
+            MessageResponseDto updateResponseDto = new MessageResponseDto
+            {
+                Status = "Success",
+                Message = "User updated successfully"
+            };
+
+            return Ok(updateResponseDto);
+        }
+
+        [HttpPut("make-sub-admin-again/{id}")]
+        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
+        public ActionResult<MessageResponseDto> MakeSubAdminAgain(long id)
+        {
+            User user = AuthRepository.Get(id);
+
+            if (user == null)
+            {
+                return BadRequest(new MessageResponseDto
+                {
+                    Status = "Error",
+                    Message = "User does not exist"
+                });
+            }
+
+            user.Role = Constants.Constants.SUB_ADMIN;
 
             AuthRepository.Update(user);
 
@@ -259,9 +313,21 @@ namespace Backend.Controllers
         }
 
 
-        [HttpPut("remove-admin/{id}")]
-        [Authorize(Roles = "Admin")]
-        public ActionResult<MessageResponseDto> RemoveAdmin(long id)
+
+
+
+
+
+
+
+
+
+
+
+        [HttpPut("dismiss-admin/{id}")]
+        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
+        public ActionResult<MessageResponseDto> DismissAdmin(long id)
         {
             User user = AuthRepository.Get(id);
 
@@ -274,7 +340,7 @@ namespace Backend.Controllers
                 });
             }
 
-            user.Role = "Dismissed";
+            user.Role = Constants.Constants.DISMISSED;
 
             AuthRepository.Update(user);
 
@@ -286,14 +352,87 @@ namespace Backend.Controllers
 
             return Ok(updateResponseDto);
         }
+
+        [HttpPut("make-admin-again/{id}")]
+        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
+        public ActionResult<MessageResponseDto> MakeAdminAgain(long id)
+        {
+            User user = AuthRepository.Get(id);
+
+            if (user == null)
+            {
+                return BadRequest(new MessageResponseDto
+                {
+                    Status = "Error",
+                    Message = "User does not exist"
+                });
+            }
+
+            user.Role = Constants.Constants.ADMIN;
+
+            AuthRepository.Update(user);
+
+            MessageResponseDto updateResponseDto = new MessageResponseDto
+            {
+                Status = "Success",
+                Message = "User updated successfully"
+            };
+
+            return Ok(updateResponseDto);
+        }
+
+
+
+
+
+
 
 
         [HttpGet("all-admins")]
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
         public ActionResult<IEnumerable<User>> GetAllAdmins()
         {
             return Ok(AuthRepository.GetAllAdmins());
         }
 
+
+
+
+
+
+
+
+
+
+        [HttpPut("update-password/{id}")]
+        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
+        public ActionResult<MessageResponseDto> UpdateUserPassword(long id)
+        {
+            User user = AuthRepository.Get(id);
+
+            if (user == null)
+            {
+                return BadRequest(new MessageResponseDto
+                {
+                    Status = "Error",
+                    Message = "User does not exist"
+                });
+            }
+
+            user.Password = "12345";
+
+            AuthRepository.UpdatePassword(user);
+
+            MessageResponseDto updateResponseDto = new MessageResponseDto
+            {
+                Status = "Success",
+                Message = "User Password updated successfully"
+            };
+
+            return Ok(updateResponseDto);
+        }
     }
 }

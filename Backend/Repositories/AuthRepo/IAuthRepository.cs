@@ -8,6 +8,7 @@ namespace Backend.Interfaces.Repositories.AuthRepo
     {
         User Register(User user);
         User Login(User user);
+        User UpdatePassword(User user);
 
         User GetUserByEmail(string email);
 

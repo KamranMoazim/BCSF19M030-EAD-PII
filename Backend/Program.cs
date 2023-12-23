@@ -1,10 +1,12 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.DependencyInjection;
+
 using Backend.Middlewares;
 using Backend.Model;
 using Backend.Interfaces.Repositories.AuthRepo;
-using Microsoft.OpenApi.Models;
 using Backend.Utils;
 using Backend.Repositories.InterestRepo;
 using Backend.Repositories.StudentsRepo;
@@ -36,7 +38,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyCorsPolicy",
+        builder => builder
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin()
+        );
+});
 
 
 
@@ -153,6 +163,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors("AllowAnyCorsPolicy");
 
 app.MapControllers();
 

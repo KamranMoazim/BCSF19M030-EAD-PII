@@ -8,8 +8,8 @@ namespace Backend.Utils
     public class PagedList<T> where T : Identity
     {
         public IEnumerable<T> Source { get; set; }
-        public int NumberOfRows { get; set; }
-        public int NumberOfPages { get; set; }
+        public int? NumberOfRows { get; set; }
+        public int? NumberOfPages { get; set; }
 
         public PagedList(IEnumerable<T> source, int numOfRows, int pageSize)
         {
