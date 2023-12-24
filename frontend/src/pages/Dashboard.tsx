@@ -153,10 +153,6 @@ const Dashboard = () => {
                     <div className="col-md-4">
                         <BarChartComponent title='Age Distribution' datasets={[
                             {
-                                label: '30',
-                                data: dashboardData.ageDistribution.values.map((value, index) => index == 0 ? Number(value) : 0),
-                            },
-                            {
                                 label: '20',
                                 data: dashboardData.ageDistribution.values.map((value, index) => index == 1 ? Number(value) : 0),
                             }
@@ -211,14 +207,14 @@ const Dashboard = () => {
 
 
                 {/* Last 30 days Activity */}
-                <LineChartComponent 
+                {/* <LineChartComponent 
                     rowlables={dashboardData.dailyActivityCounts.map(d => d.date.toDateString())}
                     datasets={dashboardData.dailyActivityCounts.map(d => ({
                         label: "Last 30 days Activity",
                         data: dashboardData.dailyActivityCounts.map(d => d.actionCount)
                     }))}
                     title='Last 30 days Activity'
-                />
+                /> */}
 
 
                 {/* Last 24 Hours Activity */}

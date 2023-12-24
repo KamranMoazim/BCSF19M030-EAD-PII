@@ -1,0 +1,30 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    z-index: 1000; /* Set a higher z-index */
+    transition: transform 0.3s ease;
+}
+
+.sidebar.hidden {
+    transform: translateX(-200px);
+}
+
+.toggle-btn {
+    position: absolute;
+    top: 10px;
+    left: 180px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #495057;
+}
+
+.nav-link.active {
+    color: #007bff;
+}
