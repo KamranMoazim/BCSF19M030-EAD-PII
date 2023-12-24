@@ -16,6 +16,8 @@ namespace Backend.Repositories.AppActivityRepo
         List<string> GetLeastActiveHours();
 
         List<string> GetDeadHours(int threshold = 1);
+
+        bool AddMockData();
     }
 }
 

@@ -117,9 +117,38 @@ namespace Backend.Repositories.StudentsRepo
         }
 
         // public Dictionary<string, int> GetStudentsStatusGrid(int daysThreshold = 30)
+        // public List<KeyValueDto> GetStudentsStatusGrid(int daysThreshold = 30)
+        // {
+        //     var currentDate = DateOnly.FromDateTime(DateTime.UtcNow.Date);
+
+        //     var numberOfStudentsCurrentlyStudying = _context.Student
+        //         .Count(s => s.StartDate <= currentDate && (s.EndDate == null || s.EndDate > currentDate));
+
+        //     var startDateThreshold = currentDate.AddDays(-daysThreshold);
+        //     var numberOfStudentsRecentlyEnrolled = _context.Student
+        //         .Count(s => s.StartDate >= startDateThreshold);
+
+        //     var endDateThreshold = currentDate.AddDays(daysThreshold);
+        //     var numberOfStudentsAboutToGraduate = _context.Student
+        //         .Count(s => s.EndDate != null && s.EndDate > currentDate && s.EndDate <= endDateThreshold);
+
+        //     var numberOfStudentsGraduated = _context.Student
+        //         .Count(s => s.EndDate != null && s.EndDate <= currentDate);
+
+        //     var studentsStatusGrid = new Dictionary<string, int>
+        //     {
+        //         {"Currently Studying", numberOfStudentsCurrentlyStudying},
+        //         {"Recently Enrolled", numberOfStudentsRecentlyEnrolled},
+        //         {"About to Graduate", numberOfStudentsAboutToGraduate},
+        //         {"Graduated", numberOfStudentsGraduated}
+        //     };
+
+        //     // return studentsStatusGrid;
+        //     return DictionaryToList(studentsStatusGrid);
+        // }
         public List<KeyValueDto> GetStudentsStatusGrid(int daysThreshold = 30)
         {
-            var currentDate = DateOnly.FromDateTime(DateTime.UtcNow.Date);
+            var currentDate = DateTime.UtcNow.Date;
 
             var numberOfStudentsCurrentlyStudying = _context.Student
                 .Count(s => s.StartDate <= currentDate && (s.EndDate == null || s.EndDate > currentDate));
@@ -143,7 +172,6 @@ namespace Backend.Repositories.StudentsRepo
                 {"Graduated", numberOfStudentsGraduated}
             };
 
-            // return studentsStatusGrid;
             return DictionaryToList(studentsStatusGrid);
         }
 
@@ -206,16 +234,30 @@ namespace Backend.Repositories.StudentsRepo
             const string DefaultOrderBy = "fullName"; // Provide your default value
             const OrderDirection DefaultOrderDirection = Constants.OrderDirection.Descending; // Provide your default value
 
-
-            pagingInfo.PageNumber ??= DefaultPageNumber;
-            pagingInfo.PageSize ??= DefaultPageSize;
-            pagingInfo.OrderBy ??= DefaultOrderBy;
-            pagingInfo.OrderDirection ??= DefaultOrderDirection;
-
             int PageNumber = DefaultPageNumber;
             int PageSize = DefaultPageSize;
             string OrderBy = DefaultOrderBy;
             OrderDirection OrderDirection = DefaultOrderDirection;
+
+            if (pagingInfo.PageNumber != null)
+            {
+                PageNumber = pagingInfo.PageNumber.Value;
+            }
+
+            if (pagingInfo.PageSize != null)
+            {
+                PageSize = pagingInfo.PageSize.Value;
+            }
+
+            if (pagingInfo.OrderBy != null)
+            {
+                OrderBy = pagingInfo.OrderBy;
+            }
+
+            if (pagingInfo.OrderDirection != null)
+            {
+                OrderDirection = pagingInfo.OrderDirection.Value;
+            }
 
             // var query = _context.Student.Where(x => criteria(x)).AsQueryable();
             var query = _context.Student.AsQueryable();
@@ -223,13 +265,13 @@ namespace Backend.Repositories.StudentsRepo
             // int skip = (pagingInfo.PageNumber - 1) * pagingInfo.PageSize;
             int skip = (PageNumber - 1) * PageSize;
 
-            var orderByLower = pagingInfo.OrderBy.ToLower();
+            var orderByLower = OrderBy.ToLower();
             var orderProperty = typeof(Student).GetProperties()
                 .FirstOrDefault(prop => prop.Name.ToLower() == orderByLower);
 
             if (orderProperty != null)
             {
-                if (pagingInfo.OrderDirection == OrderDirection.Ascending)
+                if (OrderDirection == OrderDirection.Ascending)
                 {
                     query = query.OrderBy(x => EF.Property<object>(x, orderProperty.Name));
                 }
@@ -239,7 +281,7 @@ namespace Backend.Repositories.StudentsRepo
                 }
             }
 
-            query = query.Skip(skip!).Take(pagingInfo.PageSize??10);
+            query = query.Skip(skip).Take(PageSize);
 
             var students = query.ToList();
 
@@ -254,55 +296,6 @@ namespace Backend.Repositories.StudentsRepo
                 totalItems! / PageSize! <= 0 ? 1 : totalItems! / PageSize!
             );
         }
-
-
-        // public PagedList<Student> PageOld(Predicate<Student> criteria, PagingInfo pagingInfo)
-        // {
-        //     var query = _context.Student.AsQueryable();
-
-        //     // Apply the filtering criteria
-        //     if (criteria != null)
-        //     {
-        //         query = query.Where(x => criteria(x));
-        //     }
-
-        //     // Apply ordering
-        //     if (!string.IsNullOrWhiteSpace(pagingInfo.OrderBy))
-        //     {
-        //         var orderProperty = typeof(Student).GetProperty(pagingInfo.OrderBy);
-
-        //         if (pagingInfo.OrderDirection == OrderDirection.Ascending)
-        //         {
-        //             query = query.OrderBy(x => EF.Property<object>(x, pagingInfo.OrderBy));
-        //         }
-        //         else
-        //         {
-        //             query = query.OrderByDescending(x => EF.Property<object>(x, pagingInfo.OrderBy));
-        //         }
-        //     }
-
-        //     // Apply paging
-        //     var skip = (pagingInfo.PageNumber - 1) * pagingInfo.PageSize;
-        //     query = query.Skip(skip).Take(pagingInfo.PageSize);
-
-        //     // Materialize the results
-        //     var students = query.ToList();
-
-        //     // Calculate total count (considering criteria)
-        //     var totalItems = _context.Student.Count(x => criteria(x));
-
-        //     // return new PagedList<Student>(students, totalItems, pagingInfo.PageNumber, pagingInfo.PageSize);
-        //     return new PagedList<Student>
-        //     (
-        //         students,
-        //         totalItems,
-        //         totalItems / pagingInfo.PageSize <= 0 ? 1 : totalItems / pagingInfo.PageSize
-        //     );
-        // }
-    
-
-
-
 
 
 

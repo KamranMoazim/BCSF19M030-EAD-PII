@@ -129,16 +129,31 @@ namespace Backend.Interfaces.Repositories.AuthRepo
             const string DefaultOrderBy = "role"; // Provide your default value
             const OrderDirection DefaultOrderDirection = Constants.OrderDirection.Descending; // Provide your default value
 
-
-            pagingInfo.PageNumber ??= DefaultPageNumber;
-            pagingInfo.PageSize ??= DefaultPageSize;
-            pagingInfo.OrderBy ??= DefaultOrderBy;
-            pagingInfo.OrderDirection ??= DefaultOrderDirection;
-
             int PageNumber = DefaultPageNumber;
             int PageSize = DefaultPageSize;
             string OrderBy = DefaultOrderBy;
             OrderDirection OrderDirection = DefaultOrderDirection;
+            
+            if (pagingInfo.PageNumber != null)
+            {
+                PageNumber = pagingInfo.PageNumber.Value;
+            }
+
+            if (pagingInfo.PageSize != null)
+            {
+                PageSize = pagingInfo.PageSize.Value;
+            }
+
+            if (pagingInfo.OrderBy != null)
+            {
+                OrderBy = pagingInfo.OrderBy;
+            }
+
+            if (pagingInfo.OrderDirection != null)
+            {
+                OrderDirection = pagingInfo.OrderDirection.Value;
+            }
+
 
             // var query = _context.Student.Where(x => criteria(x)).AsQueryable();
             var query = _context.User.AsQueryable();
@@ -146,13 +161,13 @@ namespace Backend.Interfaces.Repositories.AuthRepo
             // int skip = (pagingInfo.PageNumber - 1) * pagingInfo.PageSize;
             int skip = (PageNumber - 1) * PageSize;
 
-            var orderByLower = pagingInfo.OrderBy.ToLower();
-            var orderProperty = typeof(Student).GetProperties()
+            var orderByLower = OrderBy.ToLower();
+            var orderProperty = typeof(User).GetProperties()
                 .FirstOrDefault(prop => prop.Name.ToLower() == orderByLower);
 
             if (orderProperty != null)
             {
-                if (pagingInfo.OrderDirection == OrderDirection.Ascending)
+                if (OrderDirection == OrderDirection.Ascending)
                 {
                     query = query.OrderBy(x => EF.Property<object>(x, orderProperty.Name));
                 }
@@ -162,19 +177,19 @@ namespace Backend.Interfaces.Repositories.AuthRepo
                 }
             }
 
-            query = query.Skip(skip!).Take(pagingInfo.PageSize??10);
+            query = query.Skip(skip).Take(PageSize);
 
             var users = query.ToList();
 
             // var totalItems = _context.Student.Count(x => criteria(x));
-            var totalItems = _context.Student.Count();
+            var totalItems = _context.User.Count();
 
             return new PagedList<User>
             (
                 users,
                 totalItems,
                 // totalItems / pagingInfo.PageSize <= 0 ? 1 : totalItems / pagingInfo.PageSize
-                totalItems! / PageSize! <= 0 ? 1 : totalItems! / PageSize!
+                totalItems / PageSize <= 0 ? 1 : totalItems! / PageSize!
             );
 
 

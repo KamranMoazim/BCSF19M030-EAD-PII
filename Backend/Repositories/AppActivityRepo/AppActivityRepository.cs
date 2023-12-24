@@ -4,6 +4,11 @@ using AutoMapper;
 using Backend.Dtos;
 using Backend.Model;
 using Backend.Utils;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+
 
 namespace Backend.Repositories.AppActivityRepo
 {
@@ -16,6 +21,82 @@ namespace Backend.Repositories.AppActivityRepo
         {
             _context = context;
             _mapper = map;
+        }
+
+        public bool AddMockData() 
+        {
+            // string filePath = "Mock/interest_data.json";
+            // var jsonData = File.ReadAllText(filePath);
+            // var entities = JsonConvert.DeserializeObject<List<AppActivity>>(jsonData);
+            // foreach (var activity in entities)
+            // {
+            //     _context.AppActivity.Add(
+            //         new AppActivity 
+            //         {
+            //             UserId = activity.UserId??"ok",
+            //             UserName = activity.UserName??"ok",
+            //             Action = activity.Action??"ok",
+            //             Target = activity.Target??"ok",
+            //             Details = activity.Details??"ok",
+            //             Timestamp = DateTime.UtcNow,
+            //         }
+            //     );
+            // }
+            // _context.SaveChanges();
+
+            // string filePath = "Mock/interest_data.json";
+            // var jsonData = File.ReadAllText(filePath);
+            // var entities = JsonConvert.DeserializeObject<List<Interest>>(jsonData);
+            // foreach (var activity in entities)
+            // {
+            //     _context.Interest.Add(
+            //         new Interest 
+            //         {
+            //             Name = activity.Name??"ok",
+            //             CreatedBy = activity.CreatedBy??"ok",
+            //             CreatedOn = DateTime.UtcNow,
+            //             ModifiedBy = activity.ModifiedBy??"ok",
+            //             ModifiedOn = DateTime.UtcNow,
+            //             IsDeleted = false,
+            //         }
+            //     );
+            // }
+            // _context.SaveChanges();
+
+
+            // string filePath = "Mock/student_data.json";
+            // Random random = new Random();
+            // var jsonData = File.ReadAllText(filePath);
+            // var entities = JsonConvert.DeserializeObject<List<Student>>(jsonData);
+            // foreach (var student in entities)
+            // {
+            //     int randomInterestId = random.Next(1, 101);
+            //     _context.Student.Add(
+            //         new Student 
+            //         {
+            //             FullName = student.FullName??"ok",
+            //             Email = student.Email??"ok",
+            //             CreatedBy = student.CreatedBy??"ok",
+            //             CreatedOn = DateTime.UtcNow,
+            //             ModifiedBy = student.ModifiedBy??"ok",
+            //             ModifiedOn = DateTime.UtcNow,
+            //             IsDeleted = false,
+            //             City = student.City??"ok",
+            //             DateOfBirth = student.DateOfBirth,
+            //             DegreeTitle = student.DegreeTitle??"ok",
+            //             Department = student.Department,
+            //             EndDate = DateTime.UtcNow,
+            //             Gender = student.Gender,
+            //             Subject = student.Subject,
+            //             RollNumber = student.RollNumber,
+            //             StartDate = DateTime.UtcNow,
+            //             Interest = _context.Interest.FirstOrDefault(interest => interest.ID == randomInterestId),
+            //         }
+            //     );
+            // }
+            // _context.SaveChanges();
+
+            return true;
         }
 
         // IAppActivityRepository implementation

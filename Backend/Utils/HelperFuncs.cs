@@ -4,7 +4,7 @@ namespace Backend.Utils
 {
     public static class HelperFuncs
     {
-        public static int CalculateAge(DateOnly birthDate, DateOnly currentDate)
+        public static int CalculateAge(DateTime birthDate, DateTime currentDate)
         {
             int age = currentDate.Year - birthDate.Year;
             if (currentDate.Month < birthDate.Month || (currentDate.Month == birthDate.Month && currentDate.Day < birthDate.Day))
@@ -14,9 +14,9 @@ namespace Backend.Utils
             return age;
         }
 
-        public static DateOnly ToDateOnly(this DateTime dateTime)
+        public static DateTime ToDateOnly(this DateTime dateTime)
         {
-            return new DateOnly(dateTime.Year, dateTime.Month, dateTime.Day);
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
         }
     }
 }

@@ -31,8 +31,8 @@ const Dashboard = () => {
 
 
 
-    const k = useDashboard()
-    // console.log(data)
+    const {dashboardData} = useDashboard()
+    console.log(dashboardData)
 
 
     const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];

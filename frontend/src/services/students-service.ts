@@ -25,7 +25,8 @@ class StudentService extends HttpService<Student> {
 
         const request = this.apiClient.get<QueryResult<Student>>(this.url, { params: queryParams, signal: controller.signal }).then(res => res.data);
 
-        return { request, cancel: () => controller.abort() };
+        // return { request, cancel: () => controller.abort() };
+        return request
     }
 
     // get-provincial-distribution  {}
@@ -34,7 +35,8 @@ class StudentService extends HttpService<Student> {
 
         const request = this.apiClient.get<Distributions[]>(`${this.url}/get-provincial-distribution`, { signal: controller.signal }).then(res => res.data);
 
-        return { request, cancel: () => controller.abort() };
+        // return { request, cancel: () => controller.abort() };
+        return request
     }
 
     // get-daily-student-creation-data  []
@@ -43,7 +45,8 @@ class StudentService extends HttpService<Student> {
 
         const request = this.apiClient.get<DailyStudentCreationData[]>(`${this.url}/get-daily-student-creation-data`, { signal: controller.signal }).then(res => res.data);
 
-        return { request, cancel: () => controller.abort() };
+        // return { request, cancel: () => controller.abort() };
+        return request
     }
 
     // get-age-distribution  {}
@@ -52,7 +55,8 @@ class StudentService extends HttpService<Student> {
 
         const request = this.apiClient.get<Distributions[]>(`${this.url}/get-age-distribution`, { signal: controller.signal }).then(res => res.data);
 
-        return { request, cancel: () => controller.abort() };
+        // return { request, cancel: () => controller.abort() };
+        return request
     }
 
     // get-department-distribution   {}
@@ -61,7 +65,8 @@ class StudentService extends HttpService<Student> {
 
         const request = this.apiClient.get<Distributions[]>(`${this.url}/get-department-distribution`, { signal: controller.signal }).then(res => res.data);
 
-        return { request, cancel: () => controller.abort() };
+        // return { request, cancel: () => controller.abort() };
+        return request
     }
 
     // get-degree-distribution   {}
@@ -70,7 +75,8 @@ class StudentService extends HttpService<Student> {
 
         const request = this.apiClient.get<Distributions[]>(`${this.url}/get-degree-distribution`, { signal: controller.signal }).then(res => res.data);
 
-        return { request, cancel: () => controller.abort() };
+        // return { request, cancel: () => controller.abort() };
+        return request
     }
 
     // get-gender-distribution   {}
@@ -79,7 +85,8 @@ class StudentService extends HttpService<Student> {
 
         const request = this.apiClient.get<Distributions[]>(`${this.url}/get-gender-distribution`, { signal: controller.signal }).then(res => res.data);
 
-        return { request, cancel: () => controller.abort() };
+        // return { request, cancel: () => controller.abort() };
+        return request
     }
 
 
@@ -89,7 +96,8 @@ class StudentService extends HttpService<Student> {
 
         const request = this.apiClient.get<Distributions[]>(`${this.url}/get-students-status-grid`, { signal: controller.signal }).then(res => res.data);
 
-        return { request, cancel: () => controller.abort() };
+        // return { request, cancel: () => controller.abort() };
+        return request
     }
 }
 

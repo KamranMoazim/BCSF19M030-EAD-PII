@@ -18,10 +18,18 @@ namespace Backend.Controllers
             AppActivityRepository = appActivityRepository;
         }
 
+        [HttpGet("/create-mock-data")]
+        public ActionResult<IEnumerable<AppActivity>> CreateMockData()
+        {
+            AppActivityRepository.AddMockData();
+            return Ok(AppActivityRepository.Get());
+        }
+
 
         [HttpGet]
         public ActionResult<IEnumerable<AppActivity>> Get()
         {
+
             return Ok(AppActivityRepository.Get());
         }
 

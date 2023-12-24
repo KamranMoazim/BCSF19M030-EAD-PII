@@ -60,6 +60,7 @@ namespace Backend.Middlewares
                     Title = "Internal Server Error",
                     Detail = dbEx.Message,
                 });
+                Console.WriteLine(dbEx);
             }
             catch (Exception ex)
             {

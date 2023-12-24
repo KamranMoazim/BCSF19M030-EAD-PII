@@ -14,17 +14,17 @@ class InterestService extends HttpService<Interest> {
 
     // get-top-5-interests  []
     getTop5Interests(){
-        return this.apiClient.get<string[]>("/get-top-5-interests").then(res => res.data);
+        return this.apiClient.get<string[]>(`${this.url}/get-top-5-interests`).then(res => res.data);
     }
     
     // get-bottom-5-interests  []
     getBottom5Interests(){
-        return this.apiClient.get<string[]>("/get-bottom-5-interests").then(res => res.data);
+        return this.apiClient.get<string[]>(`${this.url}/get-bottom-5-interests`).then(res => res.data);
     }
     
     // get-unique-interests-count   number
     getUniqueInterestsCount(){
-        return this.apiClient.get<number>("/get-unique-interests-count").then(res => res.data);
+        return this.apiClient.get<number>(`${this.url}/get-unique-interests-count`).then(res => res.data);
     }
 }
 
