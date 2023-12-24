@@ -23,7 +23,7 @@ class InterestService extends HttpService<Interest> {
     }
     
     // get-unique-interests-count   number
-    getIniqueInterestsCount(){
+    getUniqueInterestsCount(){
         return this.apiClient.get<number>("/get-unique-interests-count").then(res => res.data);
     }
 }

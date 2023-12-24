@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../Layout';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale,PointElement,LineElement,Title } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title, BarElement } from 'chart.js';
+import { Pie, Line, Bar } from 'react-chartjs-2';
 import useDashboard from '../hooks/useDashboard';
 import PieChartComponent from '../components/PieChartComponent';
+import LineChartComponent from '../components/LineChartComponent';
+import BarChartComponent from '../components/BarChartComponent';
+import ListComponent from '../components/ListComponent';
 
-const generateRandomColors = (length:number) => {
+
+
+
+
+const generateRandomColors = (length: number) => {
     const randomColor = () => Math.floor(Math.random() * 256);
     const backgroundColor = Array.from({ length }, () => `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 0.2)`);
     const borderColor = Array.from({ length }, () => `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 1)`);
@@ -14,35 +21,22 @@ const generateRandomColors = (length:number) => {
 
 
 // ChartJS.register(ArcElement, Tooltip, Legend);
-ChartJS.register(ArcElement, CategoryScale, LinearScale,PointElement,LineElement,Title,Tooltip,Legend);
+ChartJS.register(ArcElement, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
+
+
+
+
 
 const Dashboard = () => {
 
 
 
-    // const {data} = useDashboard()
+    const k = useDashboard()
     // console.log(data)
 
 
     const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-    const linedata = {
-        labels,
-        datasets: [
-            {
-            label: 'Dataset 1',
-            data: [1,2,3,4,5,5,6],
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-            {
-            label: 'Dataset 2',
-            data: [1,2,5,4,15,5,6],
-            borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-        ],
-    };
 
     const [interestData, setInterestData] = useState({
         topInterests: ['Interest1', 'Interest2', 'Interest3', 'Interest4', 'Interest5'],
@@ -132,13 +126,58 @@ const Dashboard = () => {
                 <div className="row mt-4">
                     <div className="col-md-4">
                         {/* <Pie data={interestData.provincialDistribution} />; */}
-                        <PieChartComponent 
-                            title='Provincial Distribution' 
-                            labels={interestData.provincialDistribution.labels} 
-                            data={interestData.provincialDistribution.data} 
+                        <PieChartComponent
+                            title='Provincial Distribution'
+                            labels={interestData.provincialDistribution.labels}
+                            data={interestData.provincialDistribution.data}
                         />
                     </div>
-                </div> 
+                </div>
+
+                {/* Provincial Distribution */}
+                <div className="row mt-4">
+                    <div className="col-md-4">
+                        {/* <Pie data={interestData.provincialDistribution} />; */}
+                        {/* <Line options={options} data={linedata} />; */}
+                        <LineChartComponent title='ABC' datasets={[
+                            {
+                                label: 'Dataset 1',
+                                data: [1, 2, 3, 4, 5, 5, 6],
+                            }
+                        ]} rowlables={labels} />
+                    </div>
+                </div>
+
+                {/* Submission Chart */}
+                <div className="row mt-4">
+                    <div className="col-md-4">
+                        {/* <Bar options={options} data={data} />; */}
+                        <BarChartComponent title='ABC' datasets={[
+                            {
+                                label: 'Dataset 1',
+                                data: [1, 2, 3, 4, 5, 5, 6],
+                            },
+                            {
+                                label: 'Dataset 2',
+                                data: [1, 2, 3, 4, 5, 5, 6],
+                            }
+                        ]} rowlables={labels} />
+                    </div>
+                </div>
+
+
+                {/* Submission Chart */}
+                <div className="row mt-4">
+                    <div className="col-md-4">
+                        <ListComponent title='Most active hours in last 30 days' list={[
+                            '10:00 am',
+                            '11:00 am',
+                            '12:00 pm',
+                            '01:00 pm',
+                            '02:00 pm',
+                            ]} />
+                    </div>
+                </div>
 
             </div>
         </Layout>

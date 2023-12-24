@@ -30,6 +30,19 @@ interface PieChartProps {
     data:number[]
 }
 
+export const options = {
+    responsive: true,
+    plugins: {
+        legend: {
+            position: 'top' as const,
+        },
+        title: {
+            display: true,
+            text: 'Chart.js Pie Chart',
+        },
+    },
+};
+
 const PieChartComponent = ({data, labels, title}:PieChartProps) => {
 
     const { backgroundColor, borderColor } = generateRandomColors(3);
@@ -49,7 +62,7 @@ const PieChartComponent = ({data, labels, title}:PieChartProps) => {
             <h4>
                 {title}
             </h4>
-            <Pie title={title} data={chartData} />;
+            <Pie options={options} data={chartData} />;
         </div>
     )
 }
