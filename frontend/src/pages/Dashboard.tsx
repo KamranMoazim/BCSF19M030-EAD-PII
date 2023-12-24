@@ -7,6 +7,7 @@ import PieChartComponent from '../components/PieChartComponent';
 import LineChartComponent from '../components/LineChartComponent';
 import BarChartComponent from '../components/BarChartComponent';
 import ListComponent from '../components/ListComponent';
+import StatusGridComponent from '../components/StatusGridComponent';
 
 
 
@@ -18,6 +19,9 @@ const generateRandomColors = (length: number) => {
     const borderColor = Array.from({ length }, () => `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 1)`);
     return { backgroundColor, borderColor };
 };
+
+
+
 
 
 // ChartJS.register(ArcElement, Tooltip, Legend);
@@ -32,10 +36,10 @@ const Dashboard = () => {
 
 
     const {dashboardData} = useDashboard()
-    console.log(dashboardData)
+    // console.log(dashboardData)
 
 
-    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
 
     const [interestData, setInterestData] = useState({
@@ -97,7 +101,7 @@ const Dashboard = () => {
 
                 {/* Top 5 Interests */}
                 <div className="row">
-                    {interestData.topInterests.map((interest, index) => (
+                    {dashboardData.top5Interests.map((interest, index) => (
                         <div key={index} className="col-md-2">
                             <div className="card bg-success text-white">
                                 <div className="card-body">{interest}</div>
@@ -108,7 +112,7 @@ const Dashboard = () => {
 
                 {/* Bottom 5 Interests */}
                 <div className="row mt-3">
-                    {interestData.bottomInterests.map((interest, index) => (
+                    {dashboardData.bottom5Interests.map((interest, index) => (
                         <div key={index} className="col-md-2">
                             <div className="card bg-danger text-white">
                                 <div className="card-body">{interest}</div>
@@ -119,8 +123,17 @@ const Dashboard = () => {
 
                 {/* Distinct Interests */}
                 <div className="mt-4">
-                    <h4>Distinct Interests: {interestData.distinctInterests}</h4>
+                    <h4>Distinct Interests: {dashboardData.uniqueInterestsCount}</h4>
                 </div>
+
+
+
+
+
+
+
+
+
 
                 {/* Provincial Distribution */}
                 <div className="row mt-4">
@@ -128,54 +141,115 @@ const Dashboard = () => {
                         {/* <Pie data={interestData.provincialDistribution} />; */}
                         <PieChartComponent
                             title='Provincial Distribution'
-                            labels={interestData.provincialDistribution.labels}
-                            data={interestData.provincialDistribution.data}
+                            labels={dashboardData.provincialDistribution.keys}
+                            data={dashboardData.provincialDistribution.values.map((value) => Number(value))}
                         />
                     </div>
                 </div>
 
-                {/* Provincial Distribution */}
+
+                {/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Age Distribution Chart !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
+                <div className="row mt-4">
+                    <div className="col-md-4">
+                        <BarChartComponent title='Age Distribution' datasets={[
+                            {
+                                label: '30',
+                                data: dashboardData.ageDistribution.values.map((value, index) => index == 0 ? Number(value) : 0),
+                            },
+                            {
+                                label: '20',
+                                data: dashboardData.ageDistribution.values.map((value, index) => index == 1 ? Number(value) : 0),
+                            }
+                        ]} rowlables={[...dashboardData.ageDistribution.keys]} />
+                    </div>
+                </div>
+
+                {/* Department Distribution */}
                 <div className="row mt-4">
                     <div className="col-md-4">
                         {/* <Pie data={interestData.provincialDistribution} />; */}
-                        {/* <Line options={options} data={linedata} />; */}
-                        <LineChartComponent title='ABC' datasets={[
-                            {
-                                label: 'Dataset 1',
-                                data: [1, 2, 3, 4, 5, 5, 6],
-                            }
-                        ]} rowlables={labels} />
-                    </div>
-                </div>
-
-                {/* Submission Chart */}
-                <div className="row mt-4">
-                    <div className="col-md-4">
-                        {/* <Bar options={options} data={data} />; */}
-                        <BarChartComponent title='ABC' datasets={[
-                            {
-                                label: 'Dataset 1',
-                                data: [1, 2, 3, 4, 5, 5, 6],
-                            },
-                            {
-                                label: 'Dataset 2',
-                                data: [1, 2, 3, 4, 5, 5, 6],
-                            }
-                        ]} rowlables={labels} />
+                        <PieChartComponent
+                            title='Department Distribution'
+                            labels={dashboardData.departmentDistribution.keys}
+                            data={dashboardData.departmentDistribution.values.map((value) => Number(value))}
+                        />
                     </div>
                 </div>
 
 
-                {/* Submission Chart */}
+                {/* Degree Distribution */}
                 <div className="row mt-4">
                     <div className="col-md-4">
-                        <ListComponent title='Most active hours in last 30 days' list={[
-                            '10:00 am',
-                            '11:00 am',
-                            '12:00 pm',
-                            '01:00 pm',
-                            '02:00 pm',
-                            ]} />
+                        <PieChartComponent
+                            title='Degree Distribution'
+                            labels={dashboardData.degreeDistribution.keys}
+                            data={dashboardData.degreeDistribution.values.map((value) => Number(value))}
+                        />
+                    </div>
+                </div>
+
+                {/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! StatusGridComponent !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/}
+                <div className="row mt-4">
+                    <div className="col-md-4">
+                        <StatusGridComponent keys={dashboardData.studentsStatusGrid.keys} labels={dashboardData.studentsStatusGrid.values} />
+                    </div>
+                </div>
+
+
+
+                {/* Provincial Distribution */}
+                <div className="row mt-4">
+                    <div className="col-md-4">
+                        <PieChartComponent
+                            title='Gender Distribution'
+                            labels={dashboardData.genderDistribution.keys}
+                            data={dashboardData.genderDistribution.values.map((value) => Number(value))}
+                        />
+                    </div>
+                </div>
+                
+
+
+                {/* Last 30 days Activity */}
+                <LineChartComponent 
+                    rowlables={dashboardData.dailyActivityCounts.map(d => d.date.toDateString())}
+                    datasets={dashboardData.dailyActivityCounts.map(d => ({
+                        label: "Last 30 days Activity",
+                        data: dashboardData.dailyActivityCounts.map(d => d.actionCount)
+                    }))}
+                    title='Last 30 days Activity'
+                />
+
+
+                {/* Last 24 Hours Activity */}
+                {/* <LineChartComponent 
+                    rowlables={dashboardData.hourlyActivityCounts.map(d => d.date.toDateString())}
+                    datasets={dashboardData.dailyActivityCounts.map(d => ({
+                        label: "Last 24 Hours Activity",
+                        data: dashboardData.dailyActivityCounts.map(d => d.actionCount)
+                    }))}
+                    title='Last 24 Hours Activity'
+                /> */}
+
+
+                {/* Most active hours in last 30 days */}
+                <div className="row mt-4">
+                    <div className="col-md-4">
+                        <ListComponent title='Most active hours in last 30 days' list={dashboardData.mostActiveHours} />
+                    </div>
+                </div>
+
+                {/* Least active hours in last 30 days */}
+                <div className="row mt-4">
+                    <div className="col-md-4">
+                        <ListComponent title='Least active hours in last 30 days' list={dashboardData.leastActiveHours} />
+                    </div>
+                </div>
+
+                {/* Dead Hours hours in last 30 days */}
+                <div className="row mt-4">
+                    <div className="col-md-4">
+                        <ListComponent title='Dead Hours in last 30 days' list={dashboardData.deadHours} />
                     </div>
                 </div>
 
