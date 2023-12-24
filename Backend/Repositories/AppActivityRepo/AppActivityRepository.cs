@@ -96,7 +96,7 @@ namespace Backend.Repositories.AppActivityRepo
             // }
             // _context.SaveChanges();
 
-            // Random random = new Random();
+            Random random = new Random();
 
             // List<string> AllDepartements = new List<string> 
             // {
@@ -132,13 +132,12 @@ namespace Backend.Repositories.AppActivityRepo
             //     "Gujranwala",
             //     "Sargodha",
             // };
-            // foreach (var stud in _context.Student.ToList())
-            // {
-            //     int randomDepartement = random.Next(0, 9);
-            //     stud.City = Cities[randomDepartement];
-            //     _context.Student.Update(stud);
-            // }
-            // _context.SaveChanges();
+            foreach (var stud in _context.AppActivity.ToList())
+            {
+                stud.Timestamp = DateTime.UtcNow - TimeSpan.FromDays(random.Next(1, 30)) - TimeSpan.FromHours(random.Next(1, 24)) - TimeSpan.FromMinutes(random.Next(1, 60));
+                _context.AppActivity.Update(stud);
+            }
+            _context.SaveChanges();
 
             return true;
         }
@@ -207,9 +206,13 @@ namespace Backend.Repositories.AppActivityRepo
                 .OrderByDescending(h => h.ActionCount)
                 .ToList();
 
+            // Console.WriteLine($"Most Active Hours: {JsonConvert.SerializeObject(hourlyActivityCounts)}");
+
             // Assuming you want to return multiple most active hours in case of ties
             var mostActiveHours = hourlyActivityCounts
-                .Where(h => h.ActionCount == hourlyActivityCounts.First().ActionCount)
+                .OrderByDescending(h => h.ActionCount)
+                .Take(6)
+                // .Where(h => h.ActionCount == hourlyActivityCounts.First().ActionCount)
                 .Select(h => FormatHour(h.Hour))
                 .ToList();
 
@@ -233,15 +236,32 @@ namespace Backend.Repositories.AppActivityRepo
                 .ToList();
 
             var leastActiveHours = hourlyActivityCounts
-                .Where(h => h.ActionCount == hourlyActivityCounts.First().ActionCount)
+                .OrderBy(h => h.ActionCount)
+                .Take(6)
                 .Select(h => FormatHour(h.Hour))
                 .ToList();
 
             return leastActiveHours;
         }
 
-        public List<string> GetDeadHours(int threshold = 1)
+        public List<string> GetDeadHours(int threshold = 0)
         {
+
+            // var endDate = DateTime.UtcNow.Date;
+            // var startDate = endDate.AddDays(-29); // Last 30 days
+
+            // var hourlyActivityCountsToDelete = _context.AppActivity
+            //     .Where(a => a.Timestamp.Hour >= 22 && a.Timestamp.Hour <= 8)
+            //     .ToList();
+
+            // // Remove the records from the context
+            // _context.AppActivity.RemoveRange(hourlyActivityCountsToDelete);
+
+            // // Save changes to the database
+            // _context.SaveChanges();
+
+
+
             var endDate = DateTime.UtcNow.Date;
             var startDate = endDate.AddDays(-29); // Last 30 days
 
@@ -253,11 +273,19 @@ namespace Backend.Repositories.AppActivityRepo
                     Hour = g.Key,
                     ActionCount = g.Count()
                 })
-                .Where(h => h.ActionCount <= threshold)
+                // .Where(h => h.ActionCount == threshold)
+                .ToList();
+
+            // Console.WriteLine($"Dead Active Hours: {JsonConvert.SerializeObject(hourlyActivityCounts)}");
+
+            var deadHours = hourlyActivityCounts
+                .OrderBy(h => h.ActionCount)
+                .Take(6)
                 .Select(h => FormatHour(h.Hour))
                 .ToList();
 
-            return hourlyActivityCounts;
+            return deadHours;
+            // return new List<string>();
         }
 
         private static string FormatHour(int hour)

@@ -14,7 +14,7 @@ namespace Backend.Dtos
 
 
         [Required, MaxLength(15)]
-        [RegularExpression(@"^[A-Za-z]{3}\d{2}[A-Za-z]\d{3}$", ErrorMessage = "RollNumber must follow the pattern 'BCSF19M030'")]
+        // [RegularExpression(@"^[A-Za-z]{3}\d{2}[A-Za-z]\d{3}$", ErrorMessage = "RollNumber must follow the pattern 'BCSF19M030'")]
         public string RollNumber { get; set; }
 
 
@@ -27,7 +27,7 @@ namespace Backend.Dtos
 
 
         [Required, DataType(DataType.Date)]
-        public DateOnly DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
 
         [Required, MaxLength(50)]
@@ -51,10 +51,10 @@ namespace Backend.Dtos
 
 
         [Required, DataType(DataType.Date)]
-        public DateOnly StartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
 
         [Required, DataType(DataType.Date)]
-        public DateOnly EndDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

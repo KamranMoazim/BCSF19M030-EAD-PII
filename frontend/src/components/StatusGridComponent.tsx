@@ -11,19 +11,15 @@ const StatusGridComponent = ({keys, labels}:StatusGridProps) => {
             <table className="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Status</th>
-                        {keys.map((key) => (
-                            <th scope="col" key={key}>{key}</th>
-                        ))}
+                        <th scope="col">Student Status</th>
+                        <th scope="col">Count</th>
                     </tr>
                 </thead>
                 <tbody>
                     {labels.map((label, index) => (
                         <tr key={index}>
+                            <th scope="row">{keys[index]}</th>
                             <th scope="row">{label}</th>
-                            {/* {keys.map((key) => (
-                                <td>...</td>
-                            ))} */}
                         </tr>
                     ))}
                 </tbody>

@@ -19,10 +19,10 @@ namespace Backend.Controllers
         }
 
         [HttpGet("/create-mock-data")]
-        public ActionResult<IEnumerable<AppActivity>> CreateMockData()
+        public ActionResult<string> CreateMockData()
         {
             AppActivityRepository.AddMockData();
-            return Ok(AppActivityRepository.Get());
+            return Ok("OK");
         }
 
 
