@@ -132,12 +132,12 @@ namespace Backend.Repositories.AppActivityRepo
             //     "Gujranwala",
             //     "Sargodha",
             // };
-            foreach (var stud in _context.AppActivity.ToList())
-            {
-                stud.Timestamp = DateTime.UtcNow - TimeSpan.FromDays(random.Next(1, 30)) - TimeSpan.FromHours(random.Next(1, 24)) - TimeSpan.FromMinutes(random.Next(1, 60));
-                _context.AppActivity.Update(stud);
-            }
-            _context.SaveChanges();
+            // foreach (var stud in _context.Student.ToList())
+            // {
+            //     stud.CreatedOn = DateTime.UtcNow - TimeSpan.FromDays(random.Next(1, 365));
+            //     _context.Student.Update(stud);
+            // }
+            // _context.SaveChanges();
 
             return true;
         }
