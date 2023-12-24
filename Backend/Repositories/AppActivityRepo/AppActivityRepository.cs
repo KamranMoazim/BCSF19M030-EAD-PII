@@ -96,6 +96,50 @@ namespace Backend.Repositories.AppActivityRepo
             // }
             // _context.SaveChanges();
 
+            // Random random = new Random();
+
+            // List<string> AllDepartements = new List<string> 
+            // {
+            //     "Computer Science",
+            //     "Software Engineering",
+            //     "Information Technology",
+            //     "Electrical Engineering",
+            //     "Mechanical Engineering",
+            //     "Civil Engineering",
+            //     "Chemical Engineering",
+            // };
+
+            // List<string> AllDegrees = new List<string> 
+            // {
+            //     "Associate Degree",
+            //     "Bachelor's Degree",
+            //     "M-Phil Degree",
+            //     "Post Graduate Diploma",
+            //     "Doctoral Degree",
+            //     "Post Doctoral"
+            // };
+
+            // List<string> Cities = new List<string> 
+            // {
+            //     "Lahore",
+            //     "Karachi",
+            //     "Islamabad",
+            //     "Peshawar",
+            //     "Quetta",
+            //     "Multan",
+            //     "Faisalabad",
+            //     "Sialkot",
+            //     "Gujranwala",
+            //     "Sargodha",
+            // };
+            // foreach (var stud in _context.Student.ToList())
+            // {
+            //     int randomDepartement = random.Next(0, 9);
+            //     stud.City = Cities[randomDepartement];
+            //     _context.Student.Update(stud);
+            // }
+            // _context.SaveChanges();
+
             return true;
         }
 
@@ -104,6 +148,8 @@ namespace Backend.Repositories.AppActivityRepo
         {
             var endDate = DateTime.UtcNow.Date;
             var startDate = endDate.AddDays(-29); // Last 30 days
+
+            Console.WriteLine($"Start Date: {startDate}, End Date: {endDate}");
 
             var dailyActivityCounts = _context.AppActivity
                 .Where(a => a.Timestamp >= startDate && a.Timestamp <= endDate)

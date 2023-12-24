@@ -261,12 +261,12 @@ import { DailyStudentCreationData, Distributions } from '../types/Student';
 interface DashboardData {
     dailyActivityCounts: DailyActivityCounts[];
     hourlyActivityCounts: HourlyActivityCounts[];
-    MostActiveHours: string[];
+    mostActiveHours: string[];
     leastActiveHours: string[];
     deadHours: string[];
-    getTop5Interests: string[];
-    getBottom5Interests: string[];
-    getUniqueInterestsCount: number;
+    top5Interests: string[];
+    bottom5Interests: string[];
+    uniqueInterestsCount: number;
     provincialDistribution: Distributions[];
     dailyStudentCreationData: DailyStudentCreationData[];
     ageDistribution: Distributions[];
@@ -282,10 +282,10 @@ const useDashboard = () => {
         hourlyActivityCounts: [],
         deadHours: [],
         leastActiveHours: [],
-        MostActiveHours: [],
-        getTop5Interests: [],
-        getBottom5Interests: [],
-        getUniqueInterestsCount: 0,
+        mostActiveHours: [],
+        top5Interests: [],
+        bottom5Interests: [],
+        uniqueInterestsCount: 0,
         provincialDistribution: [],
         dailyStudentCreationData: [],
         ageDistribution: [],
@@ -301,100 +301,163 @@ const useDashboard = () => {
 
     useEffect(() => {
 
+        // const fetchData = async () => {
+
+        //     const sleep = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+        //     // Fetch daily activity counts
+        //     ActivityService.getDailyActivityCounts().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, dailyActivityCounts: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch hourly activity counts
+        //     ActivityService.getHourlyActivityCounts().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, hourlyActivityCounts: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch Most Active Hours
+        //     ActivityService.getMostActiveHours().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, MostActiveHours: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch least Active Hours
+        //     ActivityService.getLeastActiveHours().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, leastActiveHours: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch dead Hours
+        //     ActivityService.getDeadHours().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, deadHours: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch top 5 interests
+        //     InterestService.getTop5Interests().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, getTop5Interests: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch bottom 5 interests
+        //     InterestService.getBottom5Interests().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, getBottom5Interests: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch unique interests count
+        //     InterestService.getUniqueInterestsCount().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, getUniqueInterestsCount: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch provincial distribution
+        //     StudentService.getProvincialDistribution().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, provincialDistribution: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch daily student creation data
+        //     StudentService.getDailyStudentCreationData().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, dailyStudentCreationData: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch age distribution
+        //     StudentService.getAgeDistribution().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, ageDistribution: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch department distribution
+        //     StudentService.getDepartmentDistribution().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, departmentDistribution: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch degree distribution
+        //     StudentService.getDegreeDistribution().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, degreeDistribution: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch gender distribution
+        //     StudentService.getGenderDistribution().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, genderDistribution: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        //     // Fetch students status grid
+        //     StudentService.getStudentsStatusGrid().then((data) => {
+        //         setDashboardData((prevData) => ({ ...prevData, studentsStatusGrid: data }));
+        //         return sleep(1000); // Sleep for one second (1000 milliseconds)
+        //     });
+
+        // };
+
+
         const fetchData = async () => {
 
-            const sleep = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-            // Fetch daily activity counts
-            ActivityService.getDailyActivityCounts().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, dailyActivityCounts: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch hourly activity counts
-            ActivityService.getHourlyActivityCounts().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, hourlyActivityCounts: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch Most Active Hours
-            ActivityService.getMostActiveHours().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, MostActiveHours: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch least Active Hours
-            ActivityService.getLeastActiveHours().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, leastActiveHours: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch dead Hours
-            ActivityService.getDeadHours().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, deadHours: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch top 5 interests
-            InterestService.getTop5Interests().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, getTop5Interests: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch bottom 5 interests
-            InterestService.getBottom5Interests().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, getBottom5Interests: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch unique interests count
-            InterestService.getUniqueInterestsCount().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, getUniqueInterestsCount: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch provincial distribution
-            StudentService.getProvincialDistribution().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, provincialDistribution: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch daily student creation data
-            StudentService.getDailyStudentCreationData().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, dailyStudentCreationData: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch age distribution
-            StudentService.getAgeDistribution().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, ageDistribution: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch department distribution
-            StudentService.getDepartmentDistribution().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, departmentDistribution: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch degree distribution
-            StudentService.getDegreeDistribution().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, degreeDistribution: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch gender distribution
-            StudentService.getGenderDistribution().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, genderDistribution: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
-            // Fetch students status grid
-            StudentService.getStudentsStatusGrid().then((data) => {
-                setDashboardData((prevData) => ({ ...prevData, studentsStatusGrid: data }));
-                return sleep(1000); // Sleep for one second (1000 milliseconds)
-            });
-
+            try {
+                const [
+                    dailyActivityCount,
+                    hourlyActivityCount,
+                    mostActiveHours,
+                    leastActiveHours,
+                    deadHours,
+                    top5Interests,
+                    bottom5Interests,
+                    uniqueInterestsCount,
+                    provincialDistribution,
+                    dailyStudentCreationData,
+                    ageDistribution,
+                    departmentDistribution,
+                    degreeDistribution,
+                    genderDistribution,
+                    studentsStatusGrid,
+                ] = await Promise.all([
+                    ActivityService.getDailyActivityCounts(),
+                    ActivityService.getHourlyActivityCounts(),
+                    ActivityService.getMostActiveHours(),
+                    ActivityService.getLeastActiveHours(),
+                    ActivityService.getDeadHours(),
+                    InterestService.getTop5Interests(),
+                    InterestService.getBottom5Interests(),
+                    InterestService.getUniqueInterestsCount(),
+                    StudentService.getProvincialDistribution(),
+                    StudentService.getDailyStudentCreationData(),
+                    StudentService.getAgeDistribution(),
+                    StudentService.getDepartmentDistribution(),
+                    StudentService.getDegreeDistribution(),
+                    StudentService.getGenderDistribution(),
+                    StudentService.getStudentsStatusGrid(),
+                ].map(async (fetchFunction) => {
+                    const data = await fetchFunction;
+                    return data;
+                }));
+    
+                setDashboardData({
+                    dailyActivityCounts:dailyActivityCount as DailyActivityCounts[],
+                    hourlyActivityCounts:hourlyActivityCount as HourlyActivityCounts[],
+                    mostActiveHours: mostActiveHours as string[],
+                    leastActiveHours: leastActiveHours as string[],
+                    deadHours: deadHours as string[],
+                    top5Interests: top5Interests as string[],
+                    bottom5Interests: bottom5Interests as string[],
+                    uniqueInterestsCount: uniqueInterestsCount as number,
+                    provincialDistribution: provincialDistribution as Distributions[],
+                    dailyStudentCreationData: dailyStudentCreationData as DailyStudentCreationData[],
+                    ageDistribution: ageDistribution as Distributions[],
+                    departmentDistribution: departmentDistribution as Distributions[],
+                    degreeDistribution: degreeDistribution as Distributions[],
+                    genderDistribution: genderDistribution as Distributions[],
+                    studentsStatusGrid: studentsStatusGrid as Distributions[],
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         };
 
         fetchData();
