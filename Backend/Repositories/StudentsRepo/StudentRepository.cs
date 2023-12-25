@@ -146,7 +146,7 @@ namespace Backend.Repositories.StudentsRepo
         //     // return studentsStatusGrid;
         //     return DictionaryToList(studentsStatusGrid);
         // }
-        public List<KeyValueDto> GetStudentsStatusGrid(int daysThreshold = 30)
+        public List<KeyValueDto> GetStudentsStatusGrid(int daysThreshold = 120)
         {
             var currentDate = DateTime.UtcNow.Date;
 

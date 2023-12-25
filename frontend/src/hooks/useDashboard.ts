@@ -133,6 +133,10 @@ const useDashboard = () => {
             degreeDistribution: {...extractKeysAndValues(dashboardData.degreeDistribution)},
             genderDistribution: {...extractKeysAndValues(dashboardData.genderDistribution)},
             studentsStatusGrid: {...extractKeysAndValues(dashboardData.studentsStatusGrid)},
+            // dailyStudentCreationData: {
+            //     dates: dashboardData.dailyStudentCreationData.map(item => item.date),
+            //     studentCounts: dashboardData.dailyStudentCreationData.map(item => item.studentCount),
+            // }
         }
     };
 };

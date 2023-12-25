@@ -40,7 +40,8 @@ namespace Backend.Controllers
         }
 
         [HttpGet("get-hourly-activity-counts")]
-        public ActionResult<IEnumerable<HourlyActivityCountDto>> GetHourlyActivityCounts()
+        // public ActionResult<IEnumerable<HourlyActivityCountDto>> GetHourlyActivityCounts()
+        public ActionResult<IEnumerable<DailyActivityCountDto>> GetHourlyActivityCounts()
         {
             return Ok(AppActivityRepository.GetHourlyActivityCounts());
         }

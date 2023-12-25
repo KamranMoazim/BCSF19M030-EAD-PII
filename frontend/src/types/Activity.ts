@@ -28,8 +28,10 @@ export interface DailyActivityCounts {
 
 
 export interface HourlyActivityCounts {
-    hour:number
-    minute:number
+    // hour:number
+    // minute:number
+    // actionCount:number
+    date:Date,
     actionCount:number
     // {
     //     "hour": 6,

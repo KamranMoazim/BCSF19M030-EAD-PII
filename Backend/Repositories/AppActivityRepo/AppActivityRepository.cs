@@ -134,7 +134,8 @@ namespace Backend.Repositories.AppActivityRepo
             // };
             // foreach (var stud in _context.Student.ToList())
             // {
-            //     stud.CreatedOn = DateTime.UtcNow - TimeSpan.FromDays(random.Next(1, 365));
+            //     stud.StartDate = DateTime.UtcNow - TimeSpan.FromDays(random.Next(1, 365*4));
+            //     stud.EndDate = stud.StartDate + TimeSpan.FromDays(random.Next(1, 365*4));
             //     _context.Student.Update(stud);
             // }
             // _context.SaveChanges();
@@ -165,7 +166,7 @@ namespace Backend.Repositories.AppActivityRepo
         }
 
 
-        public List<HourlyActivityCountDto> GetHourlyActivityCounts()
+        public List<DailyActivityCountDto> GetHourlyActivityCounts()
         {
             var endDate = DateTime.UtcNow;
             var startDate = endDate.AddHours(-24); // Last 24 hours
@@ -187,7 +188,16 @@ namespace Backend.Repositories.AppActivityRepo
                 .ThenBy(m => m.Minute)
                 .ToList();
 
-            return hourlyActivityCounts;
+            var dailyActivityCounts = hourlyActivityCounts
+                .GroupBy(h => h.Hour+(h.Minute/60))
+                .Select(group => new DailyActivityCountDto
+                {
+                    Date = DateTime.UtcNow.Date.AddHours(group.Key),
+                    ActionCount = group.Sum(h => h.ActionCount)
+                })
+                .ToList();
+
+            return dailyActivityCounts;
         }
 
         public List<string> GetMostActiveHours()

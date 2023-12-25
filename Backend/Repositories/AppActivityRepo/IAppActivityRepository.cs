@@ -9,7 +9,8 @@ namespace Backend.Repositories.AppActivityRepo
     {
         public List<DailyActivityCountDto> GetDailyActivityCounts();
 
-        List<HourlyActivityCountDto> GetHourlyActivityCounts();
+        // List<HourlyActivityCountDto> GetHourlyActivityCounts();
+        List<DailyActivityCountDto> GetHourlyActivityCounts();
 
         List<string> GetMostActiveHours();
 
