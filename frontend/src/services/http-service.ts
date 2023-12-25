@@ -17,7 +17,7 @@ export class HttpService<T extends Entity> {
     getAll() {
         const controller = new AbortController();
 
-        const request = this.apiClient.get<T>(this.url, { signal: controller.signal }).then(res => res.data);
+        const request = this.apiClient.get<T[]>(this.url, { signal: controller.signal }).then(res => res.data);
 
         return { request, cancel: () => controller.abort() };
     }

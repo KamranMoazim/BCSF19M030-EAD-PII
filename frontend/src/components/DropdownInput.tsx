@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Select, { components } from "react-select";
-
+import CreatableSelect from 'react-select/creatable';
 
 const CustomInput = (props:any) => {
     const { maxLength } = props.selectProps;
@@ -10,20 +10,30 @@ const CustomInput = (props:any) => {
 };
 
 
-const DropdownInput = () => {
+interface Option {
+    label: string;
+    value: number;
+}
 
-    const options = [
-        { label: "Option 1", value: 1 },
-        { label: "Option 2", value: 2 },
-        { label: "Option 3", value: 3 }
-    ];
+interface Props {
+    options : Option[]
+    onInterestChange: (selectedOption: { label: string; value: number } | null) => void;
+    defaultOption: Option
+}
+
+
+const MyDropdownInput = ({defaultOption, options, onInterestChange}:Props) => {
 
     return (
-        <Select
+        <CreatableSelect
             options={options}
             components={{ Input: CustomInput }}
+            onChange={onInterestChange}
+            defaultValue={defaultOption}
+            isClearable
+            isSearchable
         />
     );
 };
 
-export default DropdownInput;
+export default MyDropdownInput;

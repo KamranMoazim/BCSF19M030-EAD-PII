@@ -2,6 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Backend.Constants;
+using Backend.Model.HelpingModels;
 using Backend.Utils;
 
 namespace Backend.Dtos

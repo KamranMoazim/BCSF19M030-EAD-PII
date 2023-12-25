@@ -1,7 +1,6 @@
 import React from 'react'
 import Layout from '../Layout'
 import { Outlet, useNavigate } from 'react-router-dom'
-import StudentTable from './StudentTable'
 
 const StudentPage = () => {
 
@@ -9,10 +8,13 @@ const StudentPage = () => {
 
     return (
         <Layout>
-            <button onClick={() => navigation("/")}>
-                Home
-            </button>
-            <Outlet />
+            {/* <button onClick={() => navigation("/students/")}>
+                Students
+            </button> */}
+            <div className="container mt-4">
+                <h1>Students</h1>
+                <Outlet />
+            </div>
         </Layout>
     )
 }

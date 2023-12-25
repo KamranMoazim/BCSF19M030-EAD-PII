@@ -21,6 +21,10 @@ namespace Backend.Repositories.StudentsRepo
         }
 
 
+        // public List<Student> GetAllStudents();
+        // {
+        //     return _context.Student.ToList();
+        // }
 
 
         // ISudentRepository implementation
@@ -194,7 +198,7 @@ namespace Backend.Repositories.StudentsRepo
 
         public Student Get(long id)
         {
-            return _context.Student.Find(id);
+            return _context.Student.Include(st => st.Interest).FirstOrDefault(s => s.ID == id);;
         }
 
         public IEnumerable<Student> Get()
@@ -281,7 +285,7 @@ namespace Backend.Repositories.StudentsRepo
                 }
             }
 
-            query = query.Skip(skip).Take(PageSize);
+            query = query.Skip(skip).Take(PageSize).Include(s => s.Interest);
 
             var students = query.ToList();
 
@@ -331,6 +335,10 @@ namespace Backend.Repositories.StudentsRepo
 
             return keyValueDtoList;
         }
-    
+
+        public List<Student> GetAllStudents()
+        {
+            return _context.Student.Take(10).ToList();
+        }
     }
 }

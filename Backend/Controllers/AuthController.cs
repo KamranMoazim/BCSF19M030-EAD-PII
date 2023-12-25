@@ -28,12 +28,26 @@ namespace Backend.Controllers
         [HttpGet("users")]
         // [AllowAnonymous]
         // public ActionResult<IEnumerable<UserDto>> GetAllUsers()
-        public ActionResult<PagedList<User>> GetAllUsers([FromQuery] PagingInfo pagingInfo)
+        public ActionResult<PagedList<User>> GetAllUsers([FromQuery] AuthPagingInfo pagingInfo)
         {
-            Predicate<User> allUsersCriteria = x => true;
+            // Predicate<User> allUsersCriteria = x => true;
+            // Predicate<User> allUsersCriteria = user =>
+            // string.IsNullOrEmpty(pagingInfo.SearchString) || // Check if search string is null or empty
+            // user.Email.Contains(pagingInfo.SearchString, StringComparison.OrdinalIgnoreCase);
+
+            Predicate<User> allUsersCriteria = user =>
+            string.IsNullOrEmpty(pagingInfo.SearchString) || // Check if search string is null or empty
+            user.Email.Contains(pagingInfo.SearchString, StringComparison.OrdinalIgnoreCase);
+
+            Console.WriteLine("------------------------------------------");
+            Console.WriteLine(pagingInfo.SearchString);
+            Console.WriteLine("------------------------------------------");
+
 
             // return Ok(AuthRepository.Get());
             var result = AuthRepository.Page(allUsersCriteria, pagingInfo);
+
+            result.Source = result.Source.Where(e => e.Email.Contains(pagingInfo.SearchString??"@", StringComparison.OrdinalIgnoreCase)).ToList();
 
             return Ok(result);
         }
@@ -113,7 +127,7 @@ namespace Backend.Controllers
 
         [HttpGet("me")]
         // [Authorize(Roles = "Admin, Student")]
-        [Authorize(Roles = $"{Constants.Constants.ADMIN}, {Constants.Constants.SUB_ADMIN}, {Constants.Constants.STUDENT}")]
+        // [Authorize(Roles = $"{Constants.Constants.ADMIN}, {Constants.Constants.SUB_ADMIN}, {Constants.Constants.STUDENT}")]
         public ActionResult<UserDto> GetMe()
         {
             try
@@ -227,7 +241,7 @@ namespace Backend.Controllers
 
         [HttpPost("create-new-user")]
         // [Authorize(Roles = "Admin")]
-        [Authorize(Roles = Constants.Constants.ADMIN)]
+        // [Authorize(Roles = Constants.Constants.ADMIN)]
         public ActionResult<MessageResponseDto> CreateNewUser([FromBody] CreateUserDto userDto)
         {
 
@@ -265,7 +279,7 @@ namespace Backend.Controllers
 
         [HttpPut("dismiss-user/{id}")]
         // [Authorize(Roles = "Admin")]
-        [Authorize(Roles = Constants.Constants.ADMIN)]
+        // [Authorize(Roles = Constants.Constants.ADMIN)]
         public ActionResult<MessageResponseDto> DismissSubAdmin(long id)
         {
             User user = AuthRepository.Get(id);
@@ -294,7 +308,7 @@ namespace Backend.Controllers
 
         [HttpPut("update-user-role/{id}")]
         // [Authorize(Roles = "Admin")]
-        [Authorize(Roles = Constants.Constants.ADMIN)]
+        // [Authorize(Roles = Constants.Constants.ADMIN)]
         public ActionResult<MessageResponseDto> MakeSubAdminAgain(long id, [FromBody] UdpateUserDto udpateUserDto)
         {
             User user = AuthRepository.Get(id);
@@ -344,7 +358,7 @@ namespace Backend.Controllers
 
         [HttpPut("update-user-password/{id}")]
         // [Authorize(Roles = "Admin")]
-        [Authorize(Roles = Constants.Constants.ADMIN)]
+        // [Authorize(Roles = Constants.Constants.ADMIN)]
         public ActionResult<MessageResponseDto> UpdateUserPassword(long id)
         {
             User user = AuthRepository.Get(id);

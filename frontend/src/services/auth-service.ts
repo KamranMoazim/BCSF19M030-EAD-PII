@@ -1,8 +1,8 @@
 
 import { AxiosInstance } from "axios";
 import apiClient from "./api-client";
-import {  AdminViewUser, LoginResponse, RegisterOrLoginOrCreate, User } from "../types/Auth";
-import { QueryParams, QueryResult, Response } from "../types/General";
+import {  AdminViewUser, LoginResponse, NewUser, RegisterOrLoginOrCreate, UpdateUserRole, User } from "../types/Auth";
+import { QueryParams, QueryResult, Response, WithSearchQueryParams } from "../types/General";
 
 
 // /Student?PageNumber=1&PageSize=10&OrderBy=fullName&OrderDirection=0
@@ -20,18 +20,20 @@ class AuthService {
         this.apiClient = apiClient
     }
 
-    getAllWithQuery({OrderBy, OrderDirection, PageNumber, PageSize}:QueryParams) {
+    getAllWithQuery({OrderBy, OrderDirection, PageNumber, PageSize, SearchString}:WithSearchQueryParams) {
         const controller = new AbortController();
 
         const queryParams: Record<string, any> = {};
-        if (OrderBy) queryParams.OrderBy = OrderBy;
-        if (OrderDirection) queryParams.OrderDirection = OrderDirection;
-        if (PageNumber) queryParams.PageNumber = PageNumber;
-        if (PageSize) queryParams.PageSize = PageSize;
+        queryParams.OrderBy = OrderBy;
+        queryParams.OrderDirection = OrderDirection;
+        queryParams.PageNumber = PageNumber;
+        queryParams.PageSize = PageSize;
+        queryParams.SearchString = SearchString
 
-        const request = this.apiClient.get<QueryResult<AdminViewUser>>(this.url, { params: queryParams, signal: controller.signal }).then(res => res.data);;
+        const request = this.apiClient.get<QueryResult<AdminViewUser>>(`${this.url}/users`, { params: queryParams, signal: controller.signal }).then(res => res.data);;
 
-        return { request, cancel: () => controller.abort() };
+        // return { request, cancel: () => controller.abort() };
+        return request
     }
 
     register(registerData:RegisterOrLoginOrCreate) {
@@ -42,39 +44,31 @@ class AuthService {
         return this.apiClient.post<LoginResponse>(`${this.url}/login`, loginData).then(res => res.data);
     }
 
-    me() {
-        return this.apiClient.get<User>(`${this.url}/me`);
+    // me() {
+    //     return this.apiClient.get<User>(`${this.url}/me`);
+    // }
+
+
+
+    createNewUser(userData:NewUser) {
+        return this.apiClient.post<Response>(`${this.url}/create-new-user`, userData).then(res => res.data);
     }
 
-
-
-    createNewSubAdmin(userData:RegisterOrLoginOrCreate) {
-        return this.apiClient.post<Response>(`${this.url}/create-new-sub-admin`, userData).then(res => res.data);
+    dismissUser(id:number) {
+        return this.apiClient.put<Response>(`${this.url}/dismiss-user/${id}`).then(res => res.data);
     }
 
-    dismissSubAdmin() {
-        return this.apiClient.put<Response>(`${this.url}/dismiss-sub-admin/{id}`).then(res => res.data);
-    }
-
-    makeSubAdminAgain() {
-        return this.apiClient.put<Response>(`${this.url}/make-sub-admin-again/{id}`).then(res => res.data);
-    }
-
-
-
-    dismissAdmin() {
-        return this.apiClient.post<Response>(`${this.url}/dismiss-admin/{id}`).then(res => res.data);
-    }
-
-    makeAdminAgain() {
-        return this.apiClient.put<Response>(`${this.url}/make-admin-again/{id}`).then(res => res.data);
+    updateUserRole(id:number, role:UpdateUserRole) {
+        return this.apiClient.put<Response>(`${this.url}/update-user-role/${id}`, role).then(res => res.data);
     }
 
 
 
 
-    updatePassword() {
-        return this.apiClient.put<Response>(`${this.url}/update-password/{}`).then(res => res.data);
+
+
+    updatePassword(id:number) {
+        return this.apiClient.put<Response>(`${this.url}/update-user-password/${id}`).then(res => res.data);
     }
 
     // getAll() {

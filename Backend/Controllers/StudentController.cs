@@ -31,7 +31,7 @@ namespace Backend.Controllers
         //     return Ok(InterestRepository.Get());
         // }
 
-        [HttpPost]
+        [HttpPost()]
         public MessageResponseDto AddStudent([FromBody] AddUpdateStudentDto studentDto)
         {
             Student student = _mapper.Map<Student>(studentDto);
@@ -68,31 +68,51 @@ namespace Backend.Controllers
         //     return Ok(StudentRepository.Get());
         // }
 
-        [HttpGet]
+        [HttpGet()]
         public ActionResult<PagedList<Student>> GetAllStudents([FromQuery] PagingInfo pagingInfo)
-        // public ActionResult<List<Student>> GetAllStudents([FromQuery] PagingInfo pagingInfo)
         {
-
-            // Console.WriteLine("Page Number: " + pagingInfo.PageNumber);
-            // Console.WriteLine("Page Size: " + pagingInfo.PageSize);
-            // Console.WriteLine("Order Direction: " + pagingInfo.OrderDirection);
-            // Console.WriteLine("Order By: " + pagingInfo.OrderBy);
 
             // Assuming you want to retrieve all students without any specific criteria
             Predicate<Student> allStudentsCriteria = x => true;
 
             var result = StudentRepository.Page(allStudentsCriteria, pagingInfo);
 
+            // List<AddUpdateStudentDto> addUpdateStudentDtos = result.Source.Select(s => _mapper.Map<AddUpdateStudentDto>(s)).ToList();
+
+            // // new PagedList<AddUpdateStudentDto>
+            // // {
+            // //     Source=addUpdateStudentDtos,
+            // //     NumberOfRows = result.NumberOfRows,
+            // //     NumberOfPages = result.NumberOfRows / pagingInfo.PageSize <= 0 ? 1 : result.NumberOfRows / pagingInfo.PageSize
+            // // };
+
+            // var ok = new PagedList<AddUpdateStudentDto>
+            // (
+            //     addUpdateStudentDtos,
+            //     result.NumberOfRows??result.NumberOfRows,
+            //     result.NumberOfRows
+            // );
+
             return Ok(result);
         }
 
-        [HttpGet("/{id}")]
-        public ActionResult<Student> GetStudent(long id)
+
+        [HttpGet("/api/Student/all")]
+        public ActionResult<List<Student>> GetAllStudentsAPI()
         {
-            return Ok(StudentRepository.Get(id));
+            var result = StudentRepository.GetAllStudents();
+
+            return Ok(result);
         }
 
-        [HttpDelete("/{id}")]
+        [HttpGet("/api/Student/{id}")]
+        public ActionResult<Student> GetStudent(long id)
+        {
+            var st = StudentRepository.Get(id);
+            return Ok(st);
+        }
+
+        [HttpDelete("/api/Student/{id}")]
         public ActionResult<MessageResponseDto> DeleteStudent(long id)
         {
             var student = StudentRepository.Get(id);
@@ -114,7 +134,7 @@ namespace Backend.Controllers
             });
         }
 
-        [HttpPut("/{id}")]
+        [HttpPut("/api/Student/{id}")]
         public ActionResult<MessageResponseDto> UpdateStudent(long id, [FromBody] AddUpdateStudentDto studentDto)
         {
             var student = StudentRepository.Get(id);
@@ -127,7 +147,23 @@ namespace Backend.Controllers
                 });
             }
 
-            StudentRepository.Update(_mapper.Map<Student>(studentDto));
+            student.FullName = studentDto.FullName;
+            student.RollNumber = studentDto.RollNumber;
+            student.DateOfBirth = studentDto.DateOfBirth;
+            student.City = studentDto.City;
+            student.Email = studentDto.Email;
+
+            Interest interest = InterestRepository.GetInterestByName(studentDto.Interest);
+            student.Interest = interest;
+
+            student.Department = studentDto.Department;
+            student.DegreeTitle = studentDto.DegreeTitle;
+            student.Subject = studentDto.Subject;
+            student.StartDate = studentDto.StartDate;
+            student.EndDate = studentDto.EndDate;
+            // student.Gender = studentDto.Gender;
+
+            StudentRepository.Update(student);
 
             return Ok(new MessageResponseDto
             {

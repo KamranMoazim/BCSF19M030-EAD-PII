@@ -155,8 +155,10 @@ namespace Backend.Interfaces.Repositories.AuthRepo
             }
 
 
-            // var query = _context.Student.Where(x => criteria(x)).AsQueryable();
+            // var query = _context.User.Where(x => criteria(x)).AsQueryable();
             var query = _context.User.AsQueryable();
+
+            
 
             // int skip = (pagingInfo.PageNumber - 1) * pagingInfo.PageSize;
             int skip = (PageNumber - 1) * PageSize;

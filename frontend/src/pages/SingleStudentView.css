@@ -1,0 +1,23 @@
+/* Add this CSS to your stylesheets or inline styles */
+
+.card {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .card-title {
+    color: #007bff;
+  }
+  
+  .card-text {
+    margin-bottom: 10px;
+  }
+  
+  /* Add more custom styles as needed */
+  

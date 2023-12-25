@@ -1,6 +1,6 @@
 
 import { QueryParams, QueryResult } from "../types/General";
-import { DailyStudentCreationData, Distributions, Student } from "../types/Student";
+import { AddUpdateStudent, DailyStudentCreationData, Distributions, Student } from "../types/Student";
 import { HttpService } from "./http-service";
 
 
@@ -14,14 +14,46 @@ class StudentService extends HttpService<Student> {
         super(url);
     }
 
+    new_create(entity: AddUpdateStudent): Promise<any> {
+        console.log(entity)
+        return this.apiClient.post(this.url, entity);
+    }
+
+    new_update(id:number, entity: AddUpdateStudent): Promise<any> {
+        return this.apiClient.put(`${this.url}/${id}`, entity);
+    }
+
+
+    getSingleStudent(id: number) {
+        const controller = new AbortController();
+
+        const request = this.apiClient.get<Student>(`${this.url}/${id}`, { signal: controller.signal }).then(res => res.data);
+
+        // return { request, cancel: () => controller.abort() };
+        return request
+    }
+
+    getAllStudents() {
+        const controller = new AbortController();
+
+        const request = this.apiClient.get<Student[]>(`${this.url}/all`, { signal: controller.signal }).then(res => res.data);
+
+        // return { request, cancel: () => controller.abort() };
+        return request
+    }
+
     getAllWithQuery({ OrderBy, OrderDirection, PageNumber, PageSize }: QueryParams) {
         const controller = new AbortController();
 
         const queryParams: Record<string, any> = {};
-        if (OrderBy) queryParams.OrderBy = OrderBy;
-        if (OrderDirection) queryParams.OrderDirection = OrderDirection;
-        if (PageNumber) queryParams.PageNumber = PageNumber;
-        if (PageSize) queryParams.PageSize = PageSize;
+        // if (OrderBy) queryParams.OrderBy = OrderBy;
+        // if (OrderDirection) queryParams.OrderDirection = OrderDirection;
+        // if (PageNumber) queryParams.PageNumber = PageNumber;
+        // if (PageSize) queryParams.PageSize = PageSize;
+        queryParams.OrderBy = OrderBy;
+        queryParams.OrderDirection = OrderDirection;
+        queryParams.PageNumber = PageNumber;
+        queryParams.PageSize = PageSize;
 
         const request = this.apiClient.get<QueryResult<Student>>(this.url, { params: queryParams, signal: controller.signal }).then(res => res.data);
 

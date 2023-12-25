@@ -11,6 +11,15 @@ export interface QueryParams {
 }
 
 
+export interface WithSearchQueryParams {
+    PageNumber : number
+    PageSize : number
+    SearchString : string
+    OrderBy : string
+    OrderDirection : 0 | 1
+}
+
+
 export interface QueryResult<T> {
     source: T[]
     numberOfRows: number

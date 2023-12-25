@@ -82,6 +82,15 @@ namespace Backend.Constants
             "Doctoral Degree",
             "Post Doctoral"
         };
+
+        public static List<string> AllCities = new List<string> 
+        {
+            "Karachi",
+            "Lahore",
+            "Islamabad",
+            "Quetta",
+            "Peshawar"
+        };
         
     }
 }

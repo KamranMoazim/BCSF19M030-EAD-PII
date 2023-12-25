@@ -9,6 +9,7 @@ namespace Backend.Repositories.StudentsRepo
     public interface IStudentRepository : IRepository<Student>
     {
         // Dictionary<string, int> GetProvincialDistribution();
+        List<Student> GetAllStudents();
         List<KeyValueDto> GetProvincialDistribution();
         List<DailyStudentCreationDto> GetDailyStudentCreationData();
         // Dictionary<int, int> GetAgeDistribution();
