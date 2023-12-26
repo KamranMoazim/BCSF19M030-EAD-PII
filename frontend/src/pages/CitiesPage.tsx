@@ -3,73 +3,73 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UtilsServiceCreator from "../services/utils-service";
 import Layout from '../Layout';
-import { FaRegBuilding } from 'react-icons/fa';
+import { FaCity } from 'react-icons/fa';
 
-const DepartmentsPage = () => {
+const CitiesPage = () => {
     const UtilsService = UtilsServiceCreator();
 
-    const [departments, setDepartments] = useState<string[]>([]);
-    const [newDepartment, setNewDepartment] = useState("");
+    const [Cities, setCities] = useState<string[]>([]);
+    const [newCity, setNewCity] = useState("");
 
     useEffect(() => {
-        UtilsService.getAllDepartments()
+        UtilsService.getAllCities()
             .then((res) => {
                 console.log(res);
-                setDepartments(res);
+                setCities(res);
             })
             .catch((err) => {
                 console.log(err);
             });
     }, []);
 
-    const addNewDepartment = () => {
-        if (!newDepartment.trim()) {
-            toast.error('Please enter a valid department name');
+    const addNewCity = () => {
+        if (!newCity.trim()) {
+            toast.error('Please enter a valid city name');
             return;
         }
 
-        UtilsService.createDepartment(newDepartment)
+        UtilsService.createCity(newCity)
             .then((res) => {
                 console.log(res);
-                setDepartments([...departments, newDepartment]);
-                setNewDepartment("");
-                toast.success('Department added successfully!');
+                setCities([...Cities, newCity]);
+                setNewCity("");
+                toast.success('City added successfully!');
             })
             .catch((err) => {
                 console.log(err);
-                toast.error('Failed to add department. Please try again.');
+                toast.error('Failed to add city. Please try again.');
             });
     };
 
-    const deleteDepartment = (department: string) => {
-        UtilsService.deleteDepartment(department)
+    const deleteCity = (city: string) => {
+        UtilsService.deleteCity(city)
             .then((res) => {
                 console.log(res);
-                setDepartments(departments.filter((d) => d !== department));
-                toast.success('Department deleted successfully!');
+                setCities(Cities.filter((d) => d !== city));
+                toast.success('City deleted successfully!');
             })
             .catch((err) => {
                 console.log(err);
-                toast.error('Failed to delete department. Please try again.');
+                toast.error('Failed to delete city. Please try again.');
             });
     };
 
     return (
         <Layout>
             <div className='container col-md-8 mt-4'>
-                <h1>All Departments<FaRegBuilding className="ms-2" /></h1>
+                <h1>All Cities<FaCity className="ms-2" /></h1>
 
                 <div className="mb-3">
                     <input
-                        onChange={(e) => setNewDepartment(e.target.value)}
-                        value={newDepartment}
+                        onChange={(e) => setNewCity(e.target.value)}
+                        value={newCity}
                         type="text"
                         className="form-control"
-                        placeholder="Add New Department"
+                        placeholder="Add New City"
                     />
                     <button
                         className="btn btn-primary mt-2"
-                        onClick={addNewDepartment}
+                        onClick={addNewCity}
                     >
                         Add
                     </button>
@@ -78,18 +78,18 @@ const DepartmentsPage = () => {
                 <table className="table">
                     <thead className="thead-dark">
                         <tr>
-                            <th scope="col">Department</th>
+                            <th scope="col">City</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {departments.map((department, index) => (
+                        {Cities.map((City, index) => (
                             <tr key={index}>
-                                <td>{department}</td>
+                                <td>{City}</td>
                                 <td>
                                     <button
                                         className="btn btn-outline-danger"
-                                        onClick={() => deleteDepartment(department)}
+                                        onClick={() => deleteCity(City)}
                                     >
                                         Delete
                                     </button>
@@ -105,4 +105,4 @@ const DepartmentsPage = () => {
     );
 };
 
-export default DepartmentsPage;
+export default CitiesPage;

@@ -1,4 +1,5 @@
 
+import useAuthStore from "../state-management/auth/authStore";
 import { QueryParams, QueryResult } from "../types/General";
 import { AddUpdateStudent, DailyStudentCreationData, Distributions, Student } from "../types/Student";
 import { HttpService } from "./http-service";
@@ -15,12 +16,31 @@ class StudentService extends HttpService<Student> {
     }
 
     new_create(entity: AddUpdateStudent): Promise<any> {
+        const headers = {
+            Authorization: `Bearer ${useAuthStore.getState().user?.token}`,
+        };
         console.log(entity)
-        return this.apiClient.post(this.url, entity);
+        return this.apiClient.post(this.url, entity, {
+            headers: headers,
+        });
     }
 
     new_update(id:number, entity: AddUpdateStudent): Promise<any> {
-        return this.apiClient.put(`${this.url}/${id}`, entity);
+        const headers = {
+            Authorization: `Bearer ${useAuthStore.getState().user?.token}`,
+        };
+        return this.apiClient.put(`${this.url}/${id}`, entity, {
+            headers: headers,
+        });
+    }
+
+    new_delete(id:number): Promise<any> {
+        const headers = {
+            Authorization: `Bearer ${useAuthStore.getState().user?.token}`,
+        };
+        return this.apiClient.delete(`${this.url}/${id}`, {
+            headers: headers,
+        });
     }
 
 

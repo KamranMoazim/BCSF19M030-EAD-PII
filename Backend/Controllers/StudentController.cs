@@ -5,6 +5,7 @@ using Backend.Model;
 using Backend.Repositories.InterestRepo;
 using Backend.Repositories.StudentsRepo;
 using Backend.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -32,6 +33,7 @@ namespace Backend.Controllers
         // }
 
         [HttpPost()]
+        [Authorize(Roles = $"{Constants.Constants.ADMIN}, {Constants.Constants.SUB_ADMIN}")]
         public MessageResponseDto AddStudent([FromBody] AddUpdateStudentDto studentDto)
         {
             Student student = _mapper.Map<Student>(studentDto);
@@ -113,6 +115,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("/api/Student/{id}")]
+        [Authorize(Roles = $"{Constants.Constants.ADMIN}, {Constants.Constants.SUB_ADMIN}")]
         public ActionResult<MessageResponseDto> DeleteStudent(long id)
         {
             var student = StudentRepository.Get(id);
@@ -135,6 +138,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("/api/Student/{id}")]
+        [Authorize(Roles = $"{Constants.Constants.ADMIN}, {Constants.Constants.SUB_ADMIN}")]
         public ActionResult<MessageResponseDto> UpdateStudent(long id, [FromBody] AddUpdateStudentDto studentDto)
         {
             var student = StudentRepository.Get(id);

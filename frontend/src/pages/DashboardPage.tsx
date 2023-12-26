@@ -1,27 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../Layout';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title, BarElement } from 'chart.js';
-import { Pie, Line, Bar } from 'react-chartjs-2';
 import useDashboard from '../hooks/useDashboard';
 import PieChartComponent from '../components/PieChartComponent';
 import LineChartComponent from '../components/LineChartComponent';
 import BarChartComponent from '../components/BarChartComponent';
 import ListComponent from '../components/ListComponent';
 import StatusGridComponent from '../components/StatusGridComponent';
-
-
-
-
-
-const generateRandomColors = (length: number) => {
-    const randomColor = () => Math.floor(Math.random() * 256);
-    const backgroundColor = Array.from({ length }, () => `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 0.2)`);
-    const borderColor = Array.from({ length }, () => `rgba(${randomColor()}, ${randomColor()}, ${randomColor()}, 1)`);
-    return { backgroundColor, borderColor };
-};
-
-
-
+import { FaTachometerAlt } from 'react-icons/fa';
+import "./Dashboard.css"
 
 
 // ChartJS.register(ArcElement, Tooltip, Legend);
@@ -31,29 +18,26 @@ ChartJS.register(ArcElement, CategoryScale, LinearScale, PointElement, LineEleme
 
 
 
-const Dashboard = () => {
+const DashboardPage = () => {
 
 
 
     const {dashboardData} = useDashboard()
     // console.log(dashboardData)
 
-
-    // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
     // Use useEffect to simulate fetching data from the backend
-    useEffect(() => {
-    }, []);
+    // useEffect(() => {
+    // }, []);
 
 
     return (
         <Layout>
             <div className="container mt-4">
-                <h1>Dashboard</h1>
+                <h1 className='text-center'>Dashboard<FaTachometerAlt className="ms-2" /></h1>
 
                 <div className="row">
 
-                    <div className="col-md-9">
+                    <div className="col-md-10">
                         {/* Top 5 Interests */}
                         <div className="row">
                             <div className="col-md-12">
@@ -61,7 +45,7 @@ const Dashboard = () => {
                             </div>
                             {dashboardData.top5Interests.map((interest, index) => (
                                 <div key={index} className="col-md-2">
-                                    <div className="card bg-success text-white">
+                                    <div className="card mbg-success text-white">
                                         <div className="card-body">{interest}</div>
                                     </div>
                                 </div>
@@ -75,7 +59,7 @@ const Dashboard = () => {
                             </div>
                             {dashboardData.bottom5Interests.map((interest, index) => (
                                 <div key={index} className="col-md-2">
-                                    <div className="card bg-danger text-white">
+                                    <div className="card mbg-danger text-white">
                                         <div className="card-body">{interest}</div>
                                     </div>
                                 </div>
@@ -84,15 +68,15 @@ const Dashboard = () => {
                     </div>
 
                     {/* Distinct Interests */}
-                    <div className="col-md-3">
-                        <div className="row">
+                    <div className="col-md-2">
+                        {/* <div className="row"> */}
                             <div className="col-md-12">
-                                <div className="card bg-primary text-white">
+                                <div className="card mbg-primary text-white">
                                     <div className="card-body">
                                         Distinct Interests: {dashboardData.uniqueInterestsCount}
                                     </div>
                                 </div>
-                            </div>
+                            {/* </div> */}
                         </div>
                     </div>
 
@@ -206,7 +190,8 @@ const Dashboard = () => {
                 <div className="row mt-4">
                         <LineChartComponent
                             title='Last 24 Hours Activity'
-                            rowlables={dashboardData.hourlyActivityCounts.map(d => new Date(d.date)).map(d => d.toDateString())}
+                            rowlables={dashboardData.hourlyActivityCounts.map(d => new Date(d.date)).map(d => String(d.getHours()))}
+                            // rowLabels={dashboardData.hourlyActivityCounts.map(d => new Date(d.date).getHours())}
                             datasets={[
                                 {
                                     label: 'Last 24 Hours Activity',
@@ -253,4 +238,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default DashboardPage;

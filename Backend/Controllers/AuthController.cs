@@ -28,6 +28,7 @@ namespace Backend.Controllers
         [HttpGet("users")]
         // [AllowAnonymous]
         // public ActionResult<IEnumerable<UserDto>> GetAllUsers()
+        // [Authorize(Roles = $"{Constants.Constants.ADMIN}")]
         public ActionResult<PagedList<User>> GetAllUsers([FromQuery] AuthPagingInfo pagingInfo)
         {
             // Predicate<User> allUsersCriteria = x => true;
@@ -127,7 +128,7 @@ namespace Backend.Controllers
 
         [HttpGet("me")]
         // [Authorize(Roles = "Admin, Student")]
-        // [Authorize(Roles = $"{Constants.Constants.ADMIN}, {Constants.Constants.SUB_ADMIN}, {Constants.Constants.STUDENT}")]
+        [Authorize(Roles = $"{Constants.Constants.ADMIN}, {Constants.Constants.SUB_ADMIN}, {Constants.Constants.STUDENT}")]
         public ActionResult<UserDto> GetMe()
         {
             try
@@ -241,7 +242,7 @@ namespace Backend.Controllers
 
         [HttpPost("create-new-user")]
         // [Authorize(Roles = "Admin")]
-        // [Authorize(Roles = Constants.Constants.ADMIN)]
+        [Authorize(Roles = $"{Constants.Constants.ADMIN}")]
         public ActionResult<MessageResponseDto> CreateNewUser([FromBody] CreateUserDto userDto)
         {
 
@@ -279,7 +280,7 @@ namespace Backend.Controllers
 
         [HttpPut("dismiss-user/{id}")]
         // [Authorize(Roles = "Admin")]
-        // [Authorize(Roles = Constants.Constants.ADMIN)]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
         public ActionResult<MessageResponseDto> DismissSubAdmin(long id)
         {
             User user = AuthRepository.Get(id);
@@ -308,7 +309,7 @@ namespace Backend.Controllers
 
         [HttpPut("update-user-role/{id}")]
         // [Authorize(Roles = "Admin")]
-        // [Authorize(Roles = Constants.Constants.ADMIN)]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
         public ActionResult<MessageResponseDto> MakeSubAdminAgain(long id, [FromBody] UdpateUserDto udpateUserDto)
         {
             User user = AuthRepository.Get(id);
@@ -358,7 +359,7 @@ namespace Backend.Controllers
 
         [HttpPut("update-user-password/{id}")]
         // [Authorize(Roles = "Admin")]
-        // [Authorize(Roles = Constants.Constants.ADMIN)]
+        [Authorize(Roles = $"{Constants.Constants.ADMIN}")]
         public ActionResult<MessageResponseDto> UpdateUserPassword(long id)
         {
             User user = AuthRepository.Get(id);
@@ -372,7 +373,7 @@ namespace Backend.Controllers
                 });
             }
 
-            user.Password = "12345";
+            user.Password = "12345678";
 
             AuthRepository.UpdatePassword(user);
 

@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -16,6 +17,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("degrees")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
         public List<string> AddNewDegree(string value)
         {
             Constants.Constants.AllDegrees.Add(value);
@@ -23,6 +25,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("degrees")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
         public List<string> DeleteDegree(string value)
         {
             Constants.Constants.AllDegrees.Remove(value);
@@ -38,6 +41,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("departments")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
         public List<string> AddNewDepartment(string value)
         {
             Constants.Constants.AllDepartements.Add(value);
@@ -45,6 +49,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("departments")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
         public List<string> DeleteDepartment(string value)
         {
             Constants.Constants.AllDepartements.Remove(value);
@@ -60,6 +65,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("cities")]
+        [Authorize(Roles = $"{Constants.Constants.ADMIN}, {Constants.Constants.SUB_ADMIN}")]
         public List<string> AddNewCity(string value)
         {
             Constants.Constants.AllCities.Add(value);
@@ -67,6 +73,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("cities")]
+        [Authorize(Roles = Constants.Constants.ADMIN)]
         public List<string> DeleteCity(string value)
         {
             Constants.Constants.AllCities.Remove(value);

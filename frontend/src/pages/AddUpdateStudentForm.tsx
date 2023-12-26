@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { Student } from '../types/Student';
 import { Interest } from '../types/Interest';
 import MyDropdownInput from '../components/DropdownInput';
@@ -70,6 +73,21 @@ const AddUpdateStudentForm = () => {
         startDate: "",
         subject: ""
     } as Student)
+
+    const [errors, setErrors] = useState({
+        fullName: "",
+        rollNumber: "",
+        email: "",
+        gender: "",
+        dateOfBirth: "",
+        city: "",
+        interest: "",
+        department: "",
+        degreeTitle: "",
+        subject: "",
+        endDate: "",
+        startDate: "",
+    });
 
     const [cities, setCities] = useState<string[]>([])
     const [departments, setDepartments] = useState<string[]>([])
@@ -169,8 +187,125 @@ const AddUpdateStudentForm = () => {
     },[])
     
 
+
+    const validateForm = () => {
+        let isValid = true;
+        const newErrors = { ...errors };
+    
+        // Validate Full Name
+        if (!student.fullName.trim()) {
+            newErrors.fullName = 'Full Name is required';
+            isValid = false;
+        } else {
+            newErrors.fullName = '';
+        }
+    
+        // Validate Roll Number
+        if (!student.rollNumber.trim()) {
+            newErrors.rollNumber = 'Roll Number is required';
+            isValid = false;
+        } else {
+            newErrors.rollNumber = '';
+        }
+    
+        // Validate Email
+        if (!student.email.trim()) {
+            newErrors.email = 'Email is required';
+            isValid = false;
+        } else if (!/\S+@\S+\.\S+/.test(student.email)) {
+            newErrors.email = 'Invalid email format';
+            isValid = false;
+        } else {
+            newErrors.email = '';
+        }
+    
+        // Validate Gender
+        if (student.gender === null) {
+            newErrors.gender = 'Gender is required';
+            isValid = false;
+        } else {
+            newErrors.gender = '';
+        }
+    
+        // Validate Date of Birth
+        if (!student.dateOfBirth) {
+            newErrors.dateOfBirth = 'Date of Birth is required';
+            isValid = false;
+        } else {
+            newErrors.dateOfBirth = '';
+        }
+    
+        // Validate City
+        if (!student.city.trim()) {
+            newErrors.city = 'City is required';
+            isValid = false;
+        } else {
+            newErrors.city = '';
+        }
+    
+        // Validate Interest
+        if (!student.interest.name.trim()) {
+            newErrors.interest = 'Interest is required';
+            isValid = false;
+        } else {
+            newErrors.interest = '';
+        }
+    
+        // Validate Department
+        if (!student.department.trim()) {
+            newErrors.department = 'Department is required';
+            isValid = false;
+        } else {
+            newErrors.department = '';
+        }
+    
+        // Validate Degree Title
+        if (!student.degreeTitle.trim()) {
+            newErrors.degreeTitle = 'Degree Title is required';
+            isValid = false;
+        } else {
+            newErrors.degreeTitle = '';
+        }
+    
+        // Validate Subject
+        if (!student.subject.trim()) {
+            newErrors.subject = 'Subject is required';
+            isValid = false;
+        } else {
+            newErrors.subject = '';
+        }
+    
+        // Validate Start Date
+        if (!student.startDate) {
+            newErrors.startDate = 'Start Date is required';
+            isValid = false;
+        } else {
+            newErrors.startDate = '';
+        }
+    
+        // Validate End Date
+        if (!student.endDate) {
+            newErrors.endDate = 'End Date is required';
+            isValid = false;
+        } else {
+            newErrors.endDate = '';
+        }
+    
+        setErrors(newErrors);
+        return isValid;
+    };
+    
+
+
     const handleSubmit = () => {
         console.log(student)
+
+        if (validateForm()) 
+        {
+            // ok
+        } else {
+            return;
+        }
 
         if(student.id == 0){ // means add new student
 
@@ -190,9 +325,14 @@ const AddUpdateStudentForm = () => {
             })
                 .then((res) => {
                     console.log(res)
+                    toast.success('Student added successfully!');
+                    // setTimeout(() => {
+                    //     navigation("/students")
+                    // }, 5000)
                 })
                 .catch((err) => {
                     console.log(err)
+                    toast.error('Failed to Add Student. Please try again.');
                 })
 
         } else { // means update student
@@ -213,54 +353,23 @@ const AddUpdateStudentForm = () => {
             })
                 .then((res) => {
                     console.log(res)
+                    toast.success('Student updated successfully!');
+                    // setTimeout(() => {
+                    //     navigation("/students")
+                    // }, 5000)
                 })
                 .catch((err) => {
                     console.log(err)
+                    toast.error('Failed to Update Student. Please try again.');
                 })
 
         }
 
-        setStudent({
-            city: "",
-            createdBy: "",
-            createdOn: new Date(),
-            dateOfBirth: "",
-            degreeTitle: "",
-            department: "",
-            email: "",
-            endDate: "",
-            fullName: "",
-            gender: true,
-            id: 1,
-            interest: {
-                createdBy: "",
-                createdOn: new Date(),
-                id: 0,
-                isDeleted: false,
-                modifiedBy: "",
-                modifiedOn: new Date(),
-                name: ""
-            },
-            isDeleted: false,
-            modifiedBy: "",
-            modifiedOn: new Date(),
-            rollNumber: "",
-            startDate: "",
-            subject: ""
-        })
-
-        navigation("/students")
+        
 
     }
 
 
-    // const onInterestChange = (e:any) => {
-    //     console.log(e.target)
-    //     setStudent({...student, interest:{
-    //         ...student.interest,
-    //         name: e.target.value
-    //     }})
-    // }
 
     const onInterestChange = (selectedOption: any) => {
         if (selectedOption) {
@@ -277,12 +386,20 @@ const AddUpdateStudentForm = () => {
             // If a new value is entered (not in the dropdown)
             // Handle the logic for the new value
             console.log('New interest value:', student.interest.name);
+            setStudent({
+                ...student,
+                interest: {
+                    ...student.interest,
+                    name: student.interest.name
+                },
+            });
         }
     };
 
 
     return (
         <div>
+            <NavLink to="/students" className="btn btn-primary" >All Students</NavLink>
             <h1 className="text-center mt-4 mb-5">Add Student Form</h1>
 
             <div className="container">
@@ -295,6 +412,9 @@ const AddUpdateStudentForm = () => {
                                 value={student.fullName} 
                                 onChange={(e) => setStudent({...student, fullName: e.target.value})}
                             type="text" className="form-control" id="fullName" placeholder="Enter full name" />
+                            <div className="text-danger">
+                                {errors.fullName && <p>{errors.fullName}</p>}
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-4 mb-3">
@@ -304,6 +424,9 @@ const AddUpdateStudentForm = () => {
                                 value={student.rollNumber} 
                                 onChange={(e) => setStudent({...student, rollNumber: e.target.value})}
                             type="text" className="form-control" id="rollNo" placeholder="Enter roll number" />
+                            <div className="text-danger">
+                                {errors.rollNumber && <p>{errors.rollNumber}</p>}
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-4 mb-3">
@@ -313,6 +436,9 @@ const AddUpdateStudentForm = () => {
                                 value={student.email} 
                                 onChange={(e) => setStudent({...student, email: e.target.value})}
                             type="email" className="form-control" id="email" placeholder="Enter email address" />
+                            <div className="text-danger">
+                                {errors.email && <p>{errors.email}</p>}
+                            </div>
                         </div>
                     </div>
 
@@ -326,6 +452,9 @@ const AddUpdateStudentForm = () => {
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                             </select>
+                            <div className="text-danger">
+                                {errors.gender && <p>{errors.gender}</p>}
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-4 mb-3">
@@ -335,6 +464,9 @@ const AddUpdateStudentForm = () => {
                                 value={student.dateOfBirth} 
                                 onChange={(e) => setStudent({...student, dateOfBirth: e.target.value})}
                             type="date" className="form-control" id="dob" />
+                            <div className="text-danger">
+                                {errors.dateOfBirth && <p>{errors.dateOfBirth}</p>}
+                            </div>
                         </div>
                     </div>
 
@@ -350,6 +482,9 @@ const AddUpdateStudentForm = () => {
                                     cities.map((city, index) => (<option value={city} key={index}>{city}</option>))
                                 }
                             </select>
+                            <div className="text-danger">
+                                {errors.city && <p>{errors.city}</p>}
+                            </div>
                         </div>
                     </div>
                     
@@ -362,6 +497,9 @@ const AddUpdateStudentForm = () => {
                                 onInterestChange={onInterestChange}
                                 defaultOption={{label:student.interest.name, value:student.interest.id}}
                             />
+                            <div className="text-danger">
+                                {errors.interest && <p>{errors.interest}</p>}
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-4 mb-3">
@@ -375,6 +513,9 @@ const AddUpdateStudentForm = () => {
                                     departments.map((department, index) => (<option value={department} key={index}>{department}</option>))
                                 }
                             </select>
+                            <div className="text-danger">
+                                {errors.department && <p>{errors.department}</p>}
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-4 mb-3">
@@ -388,6 +529,9 @@ const AddUpdateStudentForm = () => {
                                     degrees.map((degree, index) => (<option value={degree} key={index}>{degree}</option>))
                                 }
                             </select>
+                            <div className="text-danger">
+                                {errors.degreeTitle && <p>{errors.degreeTitle}</p>}
+                            </div>
                         </div>
                     </div> 
 
@@ -400,6 +544,9 @@ const AddUpdateStudentForm = () => {
                                 value={student.subject} 
                                 onChange={(e) => setStudent({...student, subject: e.target.value})}
                             type="text" className="form-control" id="subject" placeholder="Enter subject" />
+                            <div className="text-danger">
+                                {errors.subject && <p>{errors.subject}</p>}
+                            </div>
                         </div>
                     </div>
 
@@ -411,6 +558,9 @@ const AddUpdateStudentForm = () => {
                                 value={student.startDate} 
                                 onChange={(e) => setStudent({...student, startDate: e.target.value})}
                             type="date" className="form-control" id="startDate" />
+                            <div className="text-danger">
+                                {errors.startDate && <p>{errors.startDate}</p>}
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-4 mb-3">
@@ -420,15 +570,36 @@ const AddUpdateStudentForm = () => {
                                 value={student.endDate} 
                                 onChange={(e) => setStudent({...student, endDate: e.target.value})}
                             type="date" className="form-control" id="endDate" />
+                            <div className="text-danger">
+                                {errors.endDate && <p>{errors.endDate}</p>}
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Display error messages */}
+                {/* <div className="text-danger">
+                    {errors.fullName && <p>{errors.fullName}</p>}
+                    {errors.rollNumber && <p>{errors.rollNumber}</p>}
+                    {errors.email && <p>{errors.email}</p>}
+                    {errors.gender && <p>{errors.gender}</p>}
+                    {errors.dateOfBirth && <p>{errors.dateOfBirth}</p>}
+                    {errors.city && <p>{errors.city}</p>}
+                    {errors.interest && <p>{errors.interest}</p>}
+                    {errors.department && <p>{errors.department}</p>}
+                    {errors.degreeTitle && <p>{errors.degreeTitle}</p>}
+                    {errors.subject && <p>{errors.subject}</p>}
+                    {errors.startDate && <p>{errors.startDate}</p>}
+                    {errors.endDate && <p>{errors.endDate}</p>}
+                </div> */}
+
 
                 {/* Add a button or any other UI elements as needed */}
                 <button onClick={handleSubmit} className='btn btn-primary'>
                     {params&& params?.id == "0" ? "Add Student" : "Update Student"}
                 </button>
             </div>
+            <ToastContainer closeButton />
         </div>
     );
 };

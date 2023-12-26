@@ -1,6 +1,10 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
+import { FaAngleDoubleLeft, FaAngleLeft, FaAngleRight, FaAngleDoubleRight } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 import {Student} from "../types/Student"
 import SingleStudentView from './SingleStudentView';
@@ -45,6 +49,8 @@ const initialData:Student[] = [
 
 const StudentTable = () => {
 
+    const StudentService = StudentServiceCreator();
+
     const [data, setData] = useState(initialData);
 
     const [orderBy, setOrderBy] = useState("id");
@@ -79,7 +85,7 @@ const StudentTable = () => {
     
 
     const fetchData = async (OrderBy:string, OrderDirection:boolean, PageNumber:number, PageSize:number) => {
-        const {source, numberOfPages, numberOfRows} = await StudentServiceCreator().getAllWithQuery({
+        const {source, numberOfPages, numberOfRows} = await StudentService.getAllWithQuery({
             OrderBy: OrderBy,
             OrderDirection: OrderDirection===false?1:0,
             PageNumber: PageNumber,
@@ -219,7 +225,28 @@ const StudentTable = () => {
     };
 
     const handleDelete = (id:number) => {
-        console.log(`Delete clicked for ID: ${id}`);
+        const shouldDelete = window.confirm(`Are you sure you want to delete the item with ID ${id}?`);
+
+        if (shouldDelete) {
+            // User clicked "OK," proceed with delete logic
+            console.log(`Deleting item with ID: ${id}`);
+            // Add your delete logic here
+            StudentService.new_delete(id)
+            .then((response) => {
+                console.log(response);
+                fetchData(
+                    orderBy,
+                    direction,
+                    currentPage,
+                    pageSize
+                );
+                toast.success('Student deleted successfully!');
+            })
+        } else {
+            // User clicked "Cancel," do nothing or handle accordingly
+            console.log(`Cancelled delete for ID: ${id}`);
+            toast.error('Failed to Delete Student. Please try again.');
+        }
 
     };
 
@@ -229,7 +256,9 @@ const StudentTable = () => {
 
     return showSingleStudentView ? 
     (<>
-        <button className='btn btn-primary' onClick={() => setShowSingleStudentView(false)}>Show All</button>
+        <button className='btn btn-primary' onClick={() => {
+            setShowSingleStudentView(false)}
+            }>Show All</button>
         <SingleStudentView student={singleStudentView } />
     </>)
     :
@@ -237,34 +266,39 @@ const StudentTable = () => {
         <div className="container mt-4">
 
             {/* Page Size Dropdown */}
-            <div className="mb-3">
-                <label htmlFor="pageSize">Page Size:</label>
-                <select id="pageSize" className="ml-2" value={pageSize} onChange={(e) => handlePageSizeChange(e)}>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                </select>
+            <div className="container mb-3">
+                <label htmlFor="pageSize" className="form-label">Page Size:</label>
+                <div className="col-md-4">
+                    <select id="pageSize" className="form-select ml-2" value={pageSize} onChange={(e) => handlePageSizeChange(e)}>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
             </div>
+
+
+
+            <NavLink to="/students/0" className="btn btn-primary" >Add New Student</NavLink>
 
             {/* Pagination Controls */}
             
             <div className="mt-3">
-                <button className="btn btn-light mr-2" onClick={handleFirstPage} disabled={currentPage === 1}>
-                    &lt;&lt; 
+                <button className="btn btn-light me-2" onClick={handleFirstPage} disabled={currentPage === 1}>
+                    <FaAngleDoubleLeft /> 
                 </button>
-                <button className="btn btn-light mr-2" onClick={handlePreviousPage} disabled={currentPage === 1}>
-                    &lt; 
+                <button className="btn btn-light me-2" onClick={handlePreviousPage} disabled={currentPage === 1}>
+                    <FaAngleLeft /> 
                 </button>
-                <span className="mr-2">
+                <span className="badge bg-secondary me-2">
                     Page {currentPage} of {totalPages}
                 </span>
-                <button className="btn btn-light mr-2" onClick={handleNextPage} disabled={currentPage === totalPages}>
-                    &gt;
+                <button className="btn btn-light me-2" onClick={handleNextPage} disabled={currentPage === totalPages}>
+                    <FaAngleRight />
                 </button>
                 <button className="btn btn-light" onClick={handleLastPage} disabled={currentPage === totalPages}>
-                    &gt;&gt;
+                    <FaAngleDoubleRight />
                 </button>
-                
             </div>
 
             <table className="table">
@@ -292,13 +326,13 @@ const StudentTable = () => {
                             <td>{item.city}</td>
                             <td>{item.interest.name}</td>
                             <td>
-                                <button className="btn btn-info me-2" onClick={() => handleView(item.id)}>
+                                <button className="btn btn-outline-info me-2" onClick={() => handleView(item.id)}>
                                     View
                                 </button>
-                                <button className="btn btn-warning me-2" onClick={() => handleEdit(item.id)}>
+                                <button className="btn btn-outline-warning me-2" onClick={() => handleEdit(item.id)}>
                                     Edit
                                 </button>
-                                <button className="btn btn-danger" onClick={() => handleDelete(item.id)}>
+                                <button className="btn btn-outline-danger" onClick={() => handleDelete(item.id)}>
                                     Delete
                                 </button>
                             </td>
@@ -306,6 +340,7 @@ const StudentTable = () => {
                     ))}
                 </tbody>
             </table>
+            <ToastContainer closeButton />
         </div>
     );
 };

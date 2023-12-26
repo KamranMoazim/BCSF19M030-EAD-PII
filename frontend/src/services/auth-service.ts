@@ -3,6 +3,7 @@ import { AxiosInstance } from "axios";
 import apiClient from "./api-client";
 import {  AdminViewUser, LoginResponse, NewUser, RegisterOrLoginOrCreate, UpdateUserRole, User } from "../types/Auth";
 import { QueryParams, QueryResult, Response, WithSearchQueryParams } from "../types/General";
+import useAuthStore from "../state-management/auth/authStore";
 
 
 // /Student?PageNumber=1&PageSize=10&OrderBy=fullName&OrderDirection=0
@@ -51,15 +52,31 @@ class AuthService {
 
 
     createNewUser(userData:NewUser) {
-        return this.apiClient.post<Response>(`${this.url}/create-new-user`, userData).then(res => res.data);
+        const headers = {
+            Authorization: `Bearer ${useAuthStore.getState().user?.token}`,
+        };
+
+        return this.apiClient.post<Response>(`${this.url}/create-new-user`, userData,{
+            headers: headers,
+        }).then(res => res.data);
     }
 
     dismissUser(id:number) {
-        return this.apiClient.put<Response>(`${this.url}/dismiss-user/${id}`).then(res => res.data);
+        const headers = {
+            Authorization: `Bearer ${useAuthStore.getState().user?.token}`,
+        };
+        return this.apiClient.put<Response>(`${this.url}/dismiss-user/${id}`, {}, {
+            headers: headers,
+        }).then(res => res.data);
     }
 
     updateUserRole(id:number, role:UpdateUserRole) {
-        return this.apiClient.put<Response>(`${this.url}/update-user-role/${id}`, role).then(res => res.data);
+        const headers = {
+            Authorization: `Bearer ${useAuthStore.getState().user?.token}`,
+        };
+        return this.apiClient.put<Response>(`${this.url}/update-user-role/${id}`, role ,{
+            headers: headers,
+        }).then(res => res.data);
     }
 
 
@@ -68,7 +85,12 @@ class AuthService {
 
 
     updatePassword(id:number) {
-        return this.apiClient.put<Response>(`${this.url}/update-user-password/${id}`).then(res => res.data);
+        const headers = {
+            Authorization: `Bearer ${useAuthStore.getState().user?.token}`,
+        };
+        return this.apiClient.put<Response>(`${this.url}/update-user-password/${id}`, {}, {
+            headers: headers,
+        }).then(res => res.data);
     }
 
     // getAll() {

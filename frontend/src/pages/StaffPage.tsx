@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FaAngleDoubleLeft, FaAngleLeft, FaAngleRight, FaAngleDoubleRight, FaUsers } from 'react-icons/fa';
+
 import Layout from '../Layout'
 import { AdminViewUser, NewUser } from '../types/Auth';
-import { useNavigate } from 'react-router-dom';
-
 import AuthServiceCreator from "../services/auth-service"
 
 const initialData: AdminViewUser[] = [
     {
         id: 1,
-        email: "tets",
-        password: "fsdfjlk",
-        role: "tests",
+        email: "tests",
+        password: "eqweqwljdkslkasjd.dasdajskdhajksdasd.asdsadasdsd",
+        role: "ADMIN",
         isDeleted: false,
         createdBy: "createdBy",
         createdOn: new Date(),
@@ -39,9 +41,6 @@ const StaffPage = () => {
     const [pageNumber, setPageNumber] = useState(1);
     const [totalNumberOfPages, setTotalNumberOfPages] = useState(1);
     const [searchString, setSearchString] = useState("");
-
-
-    const naviagtion = useNavigate()
 
 
     useEffect(() => {
@@ -129,9 +128,12 @@ const StaffPage = () => {
                 email: "",
                 role: ""
             })
+
+            toast.success('Role updated successfully!');
         })
         .catch((er) => {
             console.log(er)
+            toast.error('Failed to update Role. Please try again.');
         })
     };
 
@@ -149,9 +151,11 @@ const StaffPage = () => {
                 email: "",
                 role: ""
             })
+            toast.success('Password reset successfully!');
         })
         .catch((er) => {
             console.log(er)
+            toast.error('Failed to Reset Password. Please try again.');
         })
     };
 
@@ -164,39 +168,43 @@ const StaffPage = () => {
                     searchString,
                     pageNumber
                 );
+                toast.success('User Dismissed successfully!');
             })
             .catch((er) => {
                 console.log(er)
+                toast.error('Failed to Dismiss User. Please try again.');
             })
 
     };
 
-    const handleClick = () => {
+    const handleAdd = () => {
 
-        if(isUpdate){
-
-
-
-        } else {
-            AuthService.createNewUser(singleUser)
-                .then((res) => {
-                    console.log(res)
-    
-                    fetchData(
-                        searchString,
-                        pageNumber
-                    );
-    
-                    setSingleUser({
-                        ...singleUser,
-                        email: "",
-                        password: ""
-                    })
-                })
-                .catch((er) => {
-                    console.log(er)
-                })
+        if (!singleUser.email || !singleUser.password || !singleUser.role) {
+            toast.error('Please fill in all fields.');
+            return;
         }
+
+        AuthService.createNewUser(singleUser)
+            .then((res) => {
+                console.log(res)
+
+                fetchData(
+                    searchString,
+                    pageNumber
+                );
+
+                setSingleUser({
+                    ...singleUser,
+                    email: "",
+                    password: ""
+                })
+
+                toast.success('User Added successfully!');
+            })
+            .catch((er) => {
+                console.log(er)
+                toast.error('Failed to Add New User. Please try again.');
+            })
 
 
     };
@@ -217,7 +225,7 @@ const StaffPage = () => {
                 Students
             </button> */}
             <div className="container mt-4">
-                <h1>Staff Mangement</h1>
+                <h1>Staff Mangement<FaUsers className="ms-2" /></h1>
 
                 {isUpdate ? (
                 <div className="col-md-12">
@@ -294,9 +302,9 @@ const StaffPage = () => {
 
                     <button
                         className='btn btn-primary'
-                        onClick={handleClick}
+                        onClick={handleAdd}
                     >
-                        {"Add"}
+                        Add
                     </button>
                 </div>
                 )}
@@ -361,21 +369,26 @@ const StaffPage = () => {
                     </tbody>
                 </table>
 
-                <button className="btn btn-primary me-2" onClick={handleFirstPage} disabled={pageNumber === 1}>
-                    &lt;&lt;
+
+            <div className="d-flex align-items-center mt-3">
+                <button className="btn btn-light me-2" onClick={handleFirstPage} disabled={pageNumber === 1}>
+                    <FaAngleDoubleLeft />
                 </button>
-                <button className="btn btn-primary me-2" onClick={handlePreviousPage} disabled={pageNumber === 1}>
-                    &lt;
+                <button className="btn btn-light me-2" onClick={handlePreviousPage} disabled={pageNumber === 1}>
+                    <FaAngleLeft />
                 </button>
 
-                <button className="btn btn-primary me-2" onClick={handleNextPage} disabled={pageNumber === totalNumberOfPages}>
-                    &gt;
+                <button className="btn btn-light me-2" onClick={handleNextPage} disabled={pageNumber === totalNumberOfPages}>
+                    <FaAngleRight />
                 </button>
-                <button className="btn btn-primary" onClick={handleLastPage} disabled={pageNumber === totalNumberOfPages}>
-                    &gt;&gt;
+                <button className="btn btn-light" onClick={handleLastPage} disabled={pageNumber === totalNumberOfPages}>
+                    <FaAngleDoubleRight />
                 </button>
+            </div>
 
             </div>
+
+            <ToastContainer closeButton />
         </Layout>
     )
 }

@@ -8,7 +8,10 @@ interface StatusGridProps {
 const StatusGridComponent = ({keys, labels}:StatusGridProps) => {
     return (
         <div>
-            <table className="table table-bordered">
+            <h3>
+                Student Status Grid
+            </h3>
+            <table className="table table-bordered mt-4">
                 <thead>
                     <tr>
                         <th scope="col">Student Status</th>

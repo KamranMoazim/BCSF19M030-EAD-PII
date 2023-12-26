@@ -1,18 +1,14 @@
 import React from 'react'
 import Layout from '../Layout'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
+import { FaUserGraduate } from 'react-icons/fa'
 
 const StudentPage = () => {
 
-    const navigation = useNavigate()
-
     return (
         <Layout>
-            {/* <button onClick={() => navigation("/students/")}>
-                Students
-            </button> */}
             <div className="container mt-4">
-                <h1>Students</h1>
+                <h1>Students Management<FaUserGraduate className="ms-2" /></h1>
                 <Outlet />
             </div>
         </Layout>

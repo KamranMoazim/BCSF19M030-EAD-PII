@@ -1,0 +1,16 @@
+.list-group-item:hover {
+    background-color: #0d7ae7; /* Light gray background on hover */
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+
+/* custom.css */
+.btn-primary {
+    background-color: #0d7ae7;
+    border-color: #0d7ae7;
+}
+
+.btn-danger {
+    background-color: #0d7ae7;
+    border-color: #0d7ae7;
+}

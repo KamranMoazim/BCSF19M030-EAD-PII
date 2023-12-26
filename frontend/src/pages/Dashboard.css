@@ -1,0 +1,17 @@
+/* custom.css */
+.mbg-success {
+    background-color: #a3bdce;
+}
+
+.mbg-danger {
+    background-color: #c09fca;
+}
+
+
+.mbg-primary {
+    background-color: #b29af3;
+}
+
+.mbg-dark {
+    background-color: #5a5761;
+}

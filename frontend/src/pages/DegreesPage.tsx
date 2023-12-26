@@ -1,68 +1,78 @@
-import React, { useEffect, useState } from 'react'
-
-import UtilsServiceCreator from "../services/utils-service"
-import Layout from '../Layout'
+import React, { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import UtilsServiceCreator from "../services/utils-service";
+import Layout from '../Layout';
+import { FaGraduationCap } from 'react-icons/fa';
 
 const DegreesPage = () => {
+    const UtilsService = UtilsServiceCreator();
 
-    const UtilsService = UtilsServiceCreator()
-
-    const [degrees, setDegrees] = useState<string[]>([])
-    const [newDegree, setNewDegree] = useState("")
+    const [degrees, setDegrees] = useState<string[]>([]);
+    const [newDegree, setNewDegree] = useState("");
 
     useEffect(() => {
         UtilsService.getAllDegrees()
             .then((res) => {
-                console.log(res)
-                setDegrees(res)
+                console.log(res);
+                setDegrees(res);
             })
             .catch((err) => {
-                console.log(err)
-            })
-    }, [])
+                console.log(err);
+            });
+    }, []);
 
     const addNewDegree = () => {
+        if (!newDegree.trim()) {
+            toast.error('Please enter a valid degree name');
+            return;
+        }
+
         UtilsService.createDegree(newDegree)
             .then((res) => {
-                console.log(res)
-                setDegrees([...degrees, newDegree])
+                console.log(res);
+                setDegrees([...degrees, newDegree]);
+                setNewDegree("");
+                toast.success('Degree added successfully!');
             })
             .catch((err) => {
-                console.log(err)
-            })
-    }
+                console.log(err);
+                toast.error('Failed to add degree. Please try again.');
+            });
+    };
 
     const deleteDegree = (degree: string) => {
         UtilsService.deleteDegree(degree)
             .then((res) => {
-                console.log(res)
-                setDegrees(degrees.filter((d) => d !== degree))
+                console.log(res);
+                setDegrees(degrees.filter((d) => d !== degree));
+                toast.success('Degree deleted successfully!');
             })
             .catch((err) => {
-                console.log(err)
-            })
-    }
+                console.log(err);
+                toast.error('Failed to delete degree. Please try again.');
+            });
+    };
 
     return (
         <Layout>
-            <div className='container col-md-8'>
-                <h3>
-                    All Degrees
-                </h3>
+            <div className='container col-md-8 mt-4'>
+                <h1>All Degrees<FaGraduationCap className="ms-2" /></h1>
 
-                <div>
-                    <input 
+                <div className="mb-3">
+                    <input
                         onChange={(e) => setNewDegree(e.target.value)}
-                        value={newDegree} 
-                        type="text" 
-                        className="form-control" 
-                        placeholder="Add New Degree" />
-                    <button 
-                        className="btn btn-primary my-3"
+                        value={newDegree}
+                        type="text"
+                        className="form-control"
+                        placeholder="Add New Degree"
+                    />
+                    <button
+                        className="btn btn-primary mt-2"
                         onClick={addNewDegree}
-                        >
-                            Add
-                        </button>
+                    >
+                        Add
+                    </button>
                 </div>
 
                 <table className="table">
@@ -77,7 +87,7 @@ const DegreesPage = () => {
                             <tr key={index}>
                                 <td>{degree}</td>
                                 <td>
-                                    <button 
+                                    <button
                                         className="btn btn-outline-danger"
                                         onClick={() => deleteDegree(degree)}
                                     >
@@ -89,9 +99,10 @@ const DegreesPage = () => {
                     </tbody>
                 </table>
             </div>
-
+            {/* Toast Container for notifications */}
+            <ToastContainer closeButton />
         </Layout>
-    )
-}
+    );
+};
 
-export default DegreesPage
+export default DegreesPage;
