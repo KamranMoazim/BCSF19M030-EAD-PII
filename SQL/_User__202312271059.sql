@@ -1,0 +1,10 @@
+INSERT INTO newcomparer.dbo.[User] (Email,Password,[Role],CreatedBy,CreatedOn,ModifiedBy,ModifiedOn,IsDeleted) VALUES
+	 (N'kamran@example.com',N'$2a$12$JCjcUFAjim720C3IV4ondOwwXRJ6RC.PihSNsg6tA5bKu/5W4DH/m',N'ADMIN',NULL,'2023-12-24 12:34:59.9968246',NULL,NULL,0),
+	 (N'test@me.com',N'$2a$12$ZQJS3NrS.G.5fjkrbL.KgO7GVK9HgTRwW83ED.acMYNZfQ8oZ0Deq',N'Dismissed',NULL,'2023-12-25 23:09:59.5236475',NULL,NULL,0),
+	 (N't@gmail.com',N'$2a$12$pEdkPA9IDQ8H5XVe4N8G1.10LkALZ.Rr0poNHWOE2C2QuxzgKGhDK',N'STUDENT',NULL,'2023-12-26 15:33:43.8361509',NULL,NULL,0),
+	 (N't1@gmail.com',N'$2a$12$Mdu2gBAbxjdI/gtbo5v2Yu.CIksnqa.jxjLC.QzFzHsybHW8QNLf6',N'Dismissed',NULL,'2023-12-26 15:34:44.2271673',NULL,NULL,0),
+	 (N'test@gmail.com',N'$2a$12$vpE/gXwaKbA1nnGFG4gbJOcsZs7tVT9suM.Eg8aGhtpBEOf4nLufu',N'STUDENT',NULL,'2023-12-26 19:28:57.0254147',NULL,NULL,0),
+	 (N'kamransub@example.com',N'$2a$12$MLGvmcpnfo1/njDLKrybWusSVXO33JSTJoOTap771pTFtcP9ScCrS',N'SUB_ADMIN',NULL,'2023-12-26 20:00:39.3445456',NULL,NULL,0),
+	 (N'kamranstu@example.com',N'$2a$12$g3FaMOGvKNRlKurvuv4L3ObWhKRThcLl6oG98DflOIDZiy6t.4IuK',N'STUDENT',NULL,'2023-12-26 20:00:57.5857245',NULL,NULL,0),
+	 (N't@t.com',N'$2a$12$lyv3oSqUj1v5YybSOCVBhuLy5vf8/1MAXRlNIF9qVm6Q7pSVmKiAu',N'SUB_ADMIN',NULL,'2023-12-26 20:27:47.5160665',NULL,NULL,0),
+	 (N'hi@gmail.com',N'$2a$12$a9lWXz1PYqEXJmbYL4skVOLU9PKNnzk9DdmqgxE5SBI0apMBdAJIW',N'STUDENT',NULL,'2023-12-26 20:29:29.2810312',NULL,NULL,0);
